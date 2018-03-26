@@ -1,0 +1,34 @@
+{
+    "scripts": {
+        "build": "truffle migrate; webpack",
+        "build-kovan": "truffle migrate --network kovan; webpack",
+        "debug": "truffle debug",
+        "debug-kovan": "truffle --network kovan debug",
+        "test": "truffle test",
+        "dev": "webpack-dev-server --mode development --port 3000"
+    },
+    "dependencies": {
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.4",
+        "babel-preset-env": "^1.6.1",
+        "bitski": "github:BitskiCo/bitski-js-sdk",
+        "copy-webpack-plugin": "^4.5.1",
+        "css-loader": "^0.28.11",
+        "extract-text-webpack-plugin": "^4.0.0-beta.0",
+        "node-sass": "^4.8.3",
+        "phaser": "^3.3.0",
+        "raw-loader": "^0.5.1",
+        "sass-loader": "^6.0.7",
+        "style-loader": "^0.20.3",
+        "truffle": "^4.1.3",
+        "truffle-contract": "^3.0.4",
+        "truffle-safe-hdwallet-provider": "0.0.7",
+        "uglifyjs-webpack-plugin": "^1.2.4",
+        "webpack": "^4.2.0",
+        "webpack-cli": "^2.0.13"
+    },
+    "devDependencies": {
+        "truffle-solidity-loader": "0.0.8",
+        "webpack-dev-server": "^3.1.1"
+    }
+}
