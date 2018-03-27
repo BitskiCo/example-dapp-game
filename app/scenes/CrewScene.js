@@ -1,5 +1,21 @@
 import TokenService from '../services/TokenService.js';
 
+const labelStyle = {
+    fontSize: '32px',
+    fontFamily: 'Arial',
+    color: '#ffffff',
+    align: 'center',
+    backgroundColor: '#22aa44'
+};
+
+const buttonStyle = {
+    fontSize: '32px',
+    fontFamily: 'Arial',
+    color: '#ffffff',
+    align: 'center',
+    backgroundColor: '#1166aa'
+};
+
 const characterPositions = [
     [100, 420],
     [260, 400],
@@ -22,17 +38,18 @@ function over() {
 }
 
 function mintToken(pointer) {
-    let game = this.game;
+    let game = this;
     let tokenService = new TokenService("42"); // Kovan
 
-    tokenService.mintNewToken()
-    .on('transactionHash', function (hash) {
-        console.log("Need to display status for " + receipt);
-    }).on('receipt', function (receipt) {
-        console.log("Need to display status for " + receipt);
-    }).on('confirmation', function (confirmationNumber, receipt) {
-        game.gameEngine.scene.start('crew', { tokens: tokens });
-    }).on('error', console.error);
+    game.scene.start('transaction', {
+        method: tokenService.mintNewToken(),
+        completion: function(receipt) {
+            tokenService.list().then(function(tokens){
+                game.scene.stop('transaction');
+                game.scene.start('crew', { tokens: tokens });
+            });  
+        }
+    });
 }
 
 function create(config) {
@@ -43,10 +60,10 @@ function create(config) {
         let token = config.tokens[i];
         let character = (token % 5) + 1;
         let characterPosition = characterPositions[i];
-        let characterImage = this.add.image(characterPosition[0], characterPosition[1], 'character-' + character);
+        let characterImage = this.sys.add.image(characterPosition[0], characterPosition[1], 'character-' + character);
 
         characterImage.setInteractive();
-        characterImage.on('pointerdown', function(pointer){
+        characterImage.on('pointerdown', function(pointer) {
             game.scene.stop('crew');
             game.scene.start('unit', { token: token });
         });
@@ -55,20 +72,39 @@ function create(config) {
     var buttonTitle = '...'
 
     if (totalTokens === 1) {
-        buttonTitle = 'You have 1 guy!\nTap to get more.';
+        buttonTitle = 'You have 1 guy!';
     } else if (totalTokens < 5) {
-        buttonTitle = 'You have ' + totalTokens + ' guys!\nTap to get more.';
+        buttonTitle = 'You have ' + totalTokens + ' guys!';
     } else {
         buttonTitle = 'You have a complete crew!';
     }
 
     // TODO: Show $/Ξ price
+    
+    let labelConfig = {
+        x: 100,
+        y: 100,
+        padding: 10,
+        text: buttonTitle,
+        style: labelStyle
+    };
 
-    var button = this.add.text(380, 200, buttonTitle);
+    let label = this.sys.make.text(labelConfig);
+
 
     if (totalTokens < 5) {
+        let buttonConfig = {
+            x: 600,
+            y: 100,
+            padding: 10,
+            text: "Get more",
+            style: buttonStyle
+        };
+    
+        let button = this.sys.make.text(buttonConfig)
+    
         button.setInteractive();
-        button.on('pointerdown', mintToken);
+        button.on('pointerdown', mintToken, this);
     }
 }
 

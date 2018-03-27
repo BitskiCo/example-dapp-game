@@ -46,18 +46,18 @@ function showLoginButton(bitskiInstance) {
 function loadData(web3) {
   web3.eth.getAccounts(function (error, accounts) {
     if (error) {
-      document.getElementById('coinbase').innerText = 'Error: ' + error
+      document.getElementById('wallet').innerText = 'Error: ' + error
       document.getElementById('balance').innerText = ''
     } else if (accounts.length == 0) {
-      document.getElementById('coinbase').innerText = 'Error: no accounts'
+      document.getElementById('wallet').innerText = 'Error: no accounts'
       document.getElementById('balance').innerText = ''
     } else {
       web3.eth.getBalance(accounts[0], function (error, result) {
         if (error) {
-          document.getElementById('coinbase').innerText = 'Error: ' + error
+          document.getElementById('wallet').innerText = 'Error: ' + error
           document.getElementById('balance').innerText = ''
         } else {
-          document.getElementById('coinbase').innerText = 'Wallet: ' + accounts[0]
+          document.getElementById('wallet').innerText = 'Wallet: ' + accounts[0]
           document.getElementById('balance').innerText = 'Balance: ' + result
         }
       })

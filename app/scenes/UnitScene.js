@@ -1,5 +1,22 @@
 import TokenService from '../services/TokenService.js';
 
+const buttonStyle = {
+    fontSize: '32px',
+    fontFamily: 'Arial',
+    color: '#ffffff',
+    align: 'center',
+    backgroundColor: '#1166aa'
+};
+
+const deleteStyle = {
+    fontSize: '32px',
+    fontFamily: 'Arial',
+    color: '#ffffff',
+    align: 'center',
+    backgroundColor: '#aa2222'
+};
+
+
 function preload() {
     console.log('[CREW] preload');
     this.load.image('character-1', 'assets/character-1.png');
@@ -15,16 +32,18 @@ function back() {
 }
 
 function deleteToken(event, token) {
-    return TokenService.currentNetwork().then(function(tokenService){
-        tokenService.deleteToken(token)
-        .on('transactionHash', function(transactionHash) {
-            console.log("Need to display status for " + transactionHash);
-        })
-        .on('receipt', function (receipt) {
-            console.log("Need to display status for " + receipt);
-        }).on('confirmation', function (confirmationNumber, receipt) {
-            game.gameEngine.scene.start('crew', { tokens: tokens });
-        }).on('error', console.error);
+    let game = this;
+
+    let tokenService = new TokenService("42"); // Kovan
+
+    game.scene.start('transaction', {
+        method: tokenService.delete(token),
+        completion: function(receipt) {
+            tokenService.list().then(function(tokens){
+                game.scene.stop('transaction');
+                game.scene.start('crew', { tokens: tokens });
+            });  
+        }
     });
 }
 
@@ -35,17 +54,33 @@ function create(config) {
     let character = (token % 5) + 1;
     this.sys.add.image(420, 440, 'character-' + character);
 
-    var backButton = this.sys.add.text(20, 200, "Back");
+    let backButtonConfig = {
+        x: 100,
+        y: 100,
+        padding: 10,
+        text: 'Back',
+        style: buttonStyle
+    };
+
+    let backButton = this.sys.make.text(backButtonConfig);
 
     backButton.setInteractive();
     backButton.on('pointerdown', back, this);
 
-    var deleteButton = this.sys.add.text(580, 200, "Delete");
+    let deleteButtonConfig = {
+        x: 600,
+        y: 100,
+        padding: 10,
+        text: 'Delete',
+        style: deleteStyle
+    };
+
+    var deleteButton = this.sys.make.text(deleteButtonConfig);
 
     deleteButton.setInteractive();
     deleteButton.on('pointerdown', function(event){
-        deleteToken(event, token);
-    }, this);
+        deleteToken.call(scene, event, token);
+    });
 }
 
 const unitScene = {
