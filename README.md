@@ -1,5 +1,7 @@
 # Demo DApp
 
+![Screenshot](assets/screenshot.png)
+
 ## Contract
 
 The backend of our app will run as a contract on Ethereum. The code of this contract is located in [contracts](contracts/README.md).
