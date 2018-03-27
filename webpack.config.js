@@ -69,6 +69,9 @@ module.exports = {
 	},
 
 	plugins: [new CopyWebpackPlugin([{
+			from: './app/callback.html',
+			to: "callback.html"
+		}, {
 			from: './app/index.html',
 			to: "index.html"
 		}, {

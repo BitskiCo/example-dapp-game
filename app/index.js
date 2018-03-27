@@ -1,26 +1,35 @@
 import Game from './Game.js';
 
+
 window.addEventListener('load', function () {
+  let url = new URL(window.location.href);
+  let redirectURL = url.origin + "/callback.html";
+  var bitskiInstance = new bitski.Bitski('F3YKmUz8wJPevbjd0LJOfSTkg4IiwWlcypE6AdBXweui1lhjC1kcGDgBCub35QkO', 'kovan', redirectURL);
+
+  if (window.location.pathname === '/callback.html') {
+    bitskiInstance.provider.userManager.signInRedirect();
+    return;
+  }
+
   var web3 = window.web3;
 
   if (web3) {
     web3 = new Web3(web3.currentProvider)
     loadData(web3);
   } else {
-    var bitskiInstance = new bitski.Bitski('F3YKmUz8wJPevbjd0LJOfSTkg4IiwWlcypE6AdBXweui1lhjC1kcGDgBCub35QkO', 'kovan')
     web3 = bitskiInstance.getWeb3();
     window.web3 = web3;
-    
+
     if (bitskiInstance.provider.userManager) {
-      bitskiInstance.provider.userManager.getUser().then(function(user){
+      bitskiInstance.provider.userManager.getUser().then(function (user) {
         if (user.expired) {
           throw "Expired";
         }
-        
+
         document.getElementById('signed-out').style.display = 'none';
         document.getElementById('signed-in').style.display = 'block';
         loadData(web3);
-      }).catch(function(error){
+      }).catch(function (error) {
         showLoginButton(bitskiInstance);
       });
     } else {
