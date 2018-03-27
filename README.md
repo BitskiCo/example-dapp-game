@@ -1,5 +1,9 @@
-# Demo NFT
+# Demo DApp
 
-You will need to have Ganache running.
+## Contract
 
-Run `truffle migrate`. Then run `truffle test`. This will create a new ERC721 token at address `0x627306090abab3a6e1400e9345bc60c78a8bef57`.
+The backend of our app will run as a contract on Ethereum. The code of this contract is located in [contracts](contracts/README.md).
+
+## Game
+
+The front end of our app will run as a game using the Phaser framework. The code is located in [app](app/README.md) and the assets are located in ```assets```.
