@@ -5,7 +5,7 @@ const buttonStyle = {
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
-    backgroundColor: '#1166aa'
+    backgroundColor: '#2B67AB'
 };
 
 const deleteStyle = {
@@ -13,9 +13,15 @@ const deleteStyle = {
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
-    backgroundColor: '#aa2222'
+    backgroundColor: '#E95C3B'
 };
 
+const whatsHappeningStyle = {
+    backgroundColor: '#333333',
+    font: '18px Arial',
+    fill: 'white',
+    wordWrap: { width: 200 }
+}
 
 function preload() {
     console.log('[CREW] preload');
@@ -50,13 +56,21 @@ function deleteToken(event, token) {
 function create(config) {
     let scene = this;
 
+    this.make.text({
+        x: 580,
+        y: 0,
+        padding: 10,
+        text: "Whats Happening?\n\nThis is one of the ERC721 tokens you own!\n\nAnyone can verity that you are the owner of this token. You can send it to someone else.\n\nWe also let you 'delete' tokens (by sending them back to the contract) in case you don't like the token you got.",
+        style: whatsHappeningStyle
+    });
+
     let token = config.token;
     let character = (token % 5) + 1;
-    this.sys.add.image(420, 440, 'character-' + character);
+    this.sys.add.image(300, 300, 'character-' + character);
 
     let backButtonConfig = {
-        x: 100,
-        y: 100,
+        x: 0,
+        y: 0,
         padding: 10,
         text: 'Back',
         style: buttonStyle
@@ -68,9 +82,10 @@ function create(config) {
     backButton.on('pointerdown', back, this);
 
     let deleteButtonConfig = {
-        x: 600,
-        y: 100,
+        x: 300,
+        y: 500,
         padding: 10,
+        origin: { x: 0.5, y: 0.5},
         text: 'Delete',
         style: deleteStyle
     };

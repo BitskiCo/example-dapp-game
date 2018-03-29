@@ -1,6 +1,5 @@
 import 'phaser';
 
-import Contract from 'truffle-contract';
 import CrewScene from './scenes/CrewScene.js';
 import BootScene from './scenes/BootScene.js';
 import UnitScene from './scenes/UnitScene.js';

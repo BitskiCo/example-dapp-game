@@ -5,7 +5,7 @@ const labelStyle = {
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
-    backgroundColor: '#22aa44'
+    backgroundColor: '#2DAA58'
 };
 
 const buttonStyle = {
@@ -13,15 +13,22 @@ const buttonStyle = {
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
-    backgroundColor: '#1166aa'
+    backgroundColor: '#2B67AB'
 };
 
+const whatsHappeningStyle = {
+    backgroundColor: '#333333',
+    font: '18px Arial',
+    fill: 'white',
+    wordWrap: { width: 200 }
+}
+
 const characterPositions = [
-    [100, 420],
-    [260, 400],
-    [580, 400],
-    [740, 420],
-    [420, 440]
+    [100, 320],
+    [260, 300],
+    [420, 340],
+    [180, 460],
+    [340, 460],
 ]
 
 function preload() {
@@ -54,6 +61,14 @@ function mintToken(pointer) {
 
 function create(config) {
     let game = this;
+
+    this.make.text({
+        x: 580,
+        y: 0,
+        padding: 10,
+        text: "Whats Happening?\n\nWe've queried the ethereum network for any ERC721 tokens that are available from our contract. For earch token we calculate an appearance and show that here.\n\nIf you don't have any tokens we let you 'mint' up to five tokens.\n\nIf you do have a token you should see it here. That means our contract worked!",
+        style: whatsHappeningStyle
+    });
     
     let totalTokens = config.tokens.length;
     for (var i = 0; i < totalTokens; i++) {
@@ -82,8 +97,9 @@ function create(config) {
     // TODO: Show $/Ξ price
     
     let labelConfig = {
-        x: 100,
+        x: 300,
         y: 100,
+        origin: { x: 0.5, y: 0.5 },
         padding: 10,
         text: buttonTitle,
         style: labelStyle
@@ -94,9 +110,10 @@ function create(config) {
 
     if (totalTokens < 5) {
         let buttonConfig = {
-            x: 600,
-            y: 100,
+            x: 690,
+            y: 500,
             padding: 10,
+            origin: { x: 0.5, y: 0.5 },
             text: "Get more",
             style: buttonStyle
         };

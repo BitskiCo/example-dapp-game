@@ -1,5 +1,3 @@
-import BigNumber from 'bignumber.js'
-
 /**
  * This JSON file was created by Truffle and contains the ABI of our contract
  * as well as the address for any networks we have deployed it to.

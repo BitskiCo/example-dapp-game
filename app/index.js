@@ -10,7 +10,6 @@ window.addEventListener('load', function () {
   let bitski = new Bitski('F3YKmUz8wJPevbjd0LJOfSTkg4IiwWlcypE6AdBXweui1lhjC1kcGDgBCub35QkO', 'kovan', redirectURL);
 
   if (window.location.pathname === '/callback.html') {
-    bitski.signInCallback();
     return;
   }
 
@@ -45,7 +44,13 @@ function showLoginButton(bitski) {
 
   var connectButton = bitski.getConnectButton(document.getElementById('connect-button'));
   connectButton.callback = function (error, user) {
-    showApp(bitski);
+    if (error) {
+      console.error(error);
+    }
+
+    if (user) {
+      showApp(bitski);
+    }
   }
 }
 
