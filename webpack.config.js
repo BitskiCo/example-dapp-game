@@ -9,24 +9,13 @@ const path = require('path');
  *
  */
 
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-
-/*
- * We've enabled ExtractTextPlugin for you. This allows your app to
- * use css modules that will be moved into a separate CSS file instead of inside
- * one of your module entries!
- *
- * https://github.com/webpack-contrib/extract-text-webpack-plugin
- *
- */
-
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	devtool: 'source-map',
-	entry: './app/index.js',
+	entry: './app/index',
 
 	output: {
 		filename: 'index.js',
@@ -42,28 +31,8 @@ module.exports = {
 				loader: 'babel-loader',
 
 				options: {
-					presets: ['es2015', 'env']
+					presets: ['env']
 				}
-			},
-			{
-				test: /\.(scss|css)$/,
-
-				use: ExtractTextPlugin.extract({
-					use: [{
-							loader: 'css-loader',
-							options: {
-								sourceMap: true
-							}
-						},
-						{
-							loader: 'sass-loader',
-							options: {
-								sourceMap: true
-							}
-						}
-					],
-					fallback: 'style-loader'
-				})
 			}
 		]
 	},
