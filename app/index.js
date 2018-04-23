@@ -39,6 +39,10 @@ function showApp(web3) {
   document.getElementById('signed-out').style.display = 'none';
   document.getElementById('signed-in').style.display = 'block';
   window.game = new Game(document.getElementById('game'), web3);
+
+  web3.eth.getAccounts().then((accounts) => {
+    document.getElementById('wallet-address').innerText = accounts[0];
+  });
 }
 
 function showLoginButton(bitski) {
@@ -53,7 +57,7 @@ function showLoginButton(bitski) {
     }
 
     if (user) {
-      showApp(bitski.getWeb3());
+      showApp(bitski.getWeb3('kovan'));
     }
   }
 }
