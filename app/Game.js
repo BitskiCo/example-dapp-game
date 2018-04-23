@@ -2,6 +2,7 @@ import 'phaser';
 
 import CrewScene from './scenes/CrewScene.js';
 import BootScene from './scenes/BootScene.js';
+import NeedEthScene from './scenes/NeedEthScene.js';
 import UnitScene from './scenes/UnitScene.js';
 import TransactionScene from './scenes/TransactionScene.js';
 
@@ -19,11 +20,11 @@ export default class Game {
             parentElement.removeChild(parentElement.firstChild);
         }
 
-        parentElement.appendChild(this.gameEngine.canvas);         
+        parentElement.appendChild(this.gameEngine.canvas);
     }
 
-    
-    
+
+
     loadGame() {
         const gameConfig = {
             type: Phaser.AUTO,
@@ -37,9 +38,9 @@ export default class Game {
                     }
                 }
             },
-            scene: [BootScene, CrewScene, UnitScene, TransactionScene]
+            scene: [BootScene, CrewScene, UnitScene, TransactionScene, NeedEthScene]
         };
-        
+
         this.gameEngine = new Phaser.Game(gameConfig);
     }
 }

@@ -37,16 +37,19 @@ function create(config) {
 
     this.make.text(labelConfig);
 
-    TokenService.currentNetwork().then(function(tokenService ){
-        tokenService.list().then(function(tokens) {
-            if (tokens) {
-                game.scene.start('crew', {tokenService: tokenService, tokens: tokens});
-            } else {
-                return tokenService.getBalance().then(function(balance){
-                    throw "No tokens returned but got balance";
-                });
-            }
+    web3.eth.getAccounts().then((accounts) => {
+        return web3.eth.getBalance(accounts[0]);
+    }).then((balance) => {
+        return TokenService.currentNetwork().then(function(tokenService ){
+            return tokenService.list().then(function(tokens) {
+                if (tokens.length > 0 || balance > 0) {
+                    game.scene.start('crew', {tokenService: tokenService, tokens: tokens});
+                } else {
+                    game.scene.start('need-eth', {tokenService: tokenService, tokens: tokens});
+                }
+            });
         });
+
     }).catch(console.alert);
 }
 
