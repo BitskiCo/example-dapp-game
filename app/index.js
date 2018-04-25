@@ -3,6 +3,7 @@ import Game from './Game.js';
 import { Bitski } from 'bitski';
 
 import Web3 from 'web3';
+import { OAuthProviderIntegrationType } from '../../bitski-js-sdk/dist/types/providers/oauth-http-provider.js';
 
 window.addEventListener('load', function () {
   let url = new URL(window.location.href);
@@ -10,6 +11,7 @@ window.addEventListener('load', function () {
   let bitski = new Bitski('F3YKmUz8wJPevbjd0LJOfSTkg4IiwWlcypE6AdBXweui1lhjC1kcGDgBCub35QkO', redirectURL);
 
   if (window.location.pathname === '/callback.html') {
+    bitski.signInCallback(OAuthProviderIntegrationType.POPUP);
     return;
   }
 
@@ -50,7 +52,6 @@ function showLoginButton(bitski) {
   document.getElementById('signed-in').style.display = 'none';
 
   var connectButton = bitski.getConnectButton(document.getElementById('connect-button'));
-  connectButton.provider.authenticationIntegrationType = 2;
   connectButton.callback = function (error, user) {
     if (error) {
       console.error(error);
