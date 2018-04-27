@@ -1,6 +1,17 @@
 # Demo DApp
 
+Check out our running example [here](https://example-dapp-1.bitski.com/)
+
 ![Screenshot](assets/screenshot.png)
+
+## Running Locally
+
+```bash
+npm install
+npm run dev
+```
+
+Then browse to [http://localhost:3000](http://localhost:3000)
 
 ## Contract
 
