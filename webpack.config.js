@@ -46,7 +46,11 @@ module.exports = {
 		}, {
 			from: 'assets',
 			to: 'assets'
-		}]),
+		}, {
+		 from: 'public',
+			to: 'public'
+		}
+	]),
 		new webpack.DefinePlugin({
 			'CANVAS_RENDERER': JSON.stringify(true),
 			'WEBGL_RENDERER': JSON.stringify(true)

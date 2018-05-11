@@ -1,3 +1,4 @@
+import BaseScene from './BaseScene.js';
 import TokenService from '../services/TokenService.js';
 
 const buttonStyle = {
@@ -18,97 +19,87 @@ const deleteStyle = {
 
 const whatsHappeningStyle = {
     backgroundColor: '#333333',
-    font: '18px Arial',
+    font: '16px Arial',
     fill: 'white',
-    wordWrap: { width: 200 }
+    wordWrap: { width: 600 }
 }
 
-function preload() {
-    console.log('[CREW] preload');
-    this.load.image('character-1', 'assets/character-1.png');
-    this.load.image('character-2', 'assets/character-2.png');
-    this.load.image('character-3', 'assets/character-3.png');
-    this.load.image('character-4', 'assets/character-4.png');
-    this.load.image('character-5', 'assets/character-5.png');
-}
+export default class UnitScene extends BaseScene {
+    constructor() {
+        super({ key: 'unit', active: false });
+    }
 
-function back() {
-    this.scene.stop('unit');
-    this.scene.start('boot');
-}
+    preload() {
+        this.load.image('character-1', 'assets/character-1.png');
+        this.load.image('character-2', 'assets/character-2.png');
+        this.load.image('character-3', 'assets/character-3.png');
+        this.load.image('character-4', 'assets/character-4.png');
+        this.load.image('character-5', 'assets/character-5.png');
+    }
 
-function deleteToken(event, token) {
-    let game = this;
+    create(config) {
+        super.create(config);
 
-    let tokenService = new TokenService("42"); // Kovan
+        this.make.text({
+            x: 0,
+            y: 600,
+            origin: { x: 0, y: 1 },
+            padding: 10,
+            text: "Whats Happening?\n\nThis is one of the ERC721 tokens you own!\n\nAnyone can verity that you are the owner of this token. You can send it to someone else.\n\nWe also let you 'delete' tokens (by sending them back to the contract) in case you don't like the token you got.",
+            style: whatsHappeningStyle
+        });
 
-    game.scene.start('transaction', {
-        method: tokenService.delete(token),
-        completion: function(receipt) {
-            tokenService.list().then(function(tokens){
-                game.scene.stop('transaction');
-                game.scene.start('crew', { tokens: tokens });
-            });  
-        }
-    });
-}
+        let token = config.token;
+        let character = (token % 5) + 1;
+        this.sys.add.image(300, 300, 'character-' + character);
 
-function create(config) {
-    let scene = this;
+        let backButtonConfig = {
+            x: 0,
+            y: 0,
+            origin: { x: 0, y: 0 },
+            padding: 10,
+            text: 'Back',
+            style: buttonStyle
+        };
 
-    this.make.text({
-        x: 580,
-        y: 0,
-        padding: 10,
-        text: "Whats Happening?\n\nThis is one of the ERC721 tokens you own!\n\nAnyone can verity that you are the owner of this token. You can send it to someone else.\n\nWe also let you 'delete' tokens (by sending them back to the contract) in case you don't like the token you got.",
-        style: whatsHappeningStyle
-    });
+        let backButton = this.sys.make.text(backButtonConfig);
 
-    let token = config.token;
-    let character = (token % 5) + 1;
-    this.sys.add.image(300, 300, 'character-' + character);
+        backButton.setInteractive();
+        backButton.on('pointerdown', this.back, this);
 
-    let backButtonConfig = {
-        x: 0,
-        y: 0,
-        padding: 10,
-        text: 'Back',
-        style: buttonStyle
-    };
+        let deleteButtonConfig = {
+            x: 600,
+            y: 0,
+            padding: 10,
+            origin: { x: 1, y: 0 },
+            text: 'Delete',
+            style: deleteStyle
+        };
 
-    let backButton = this.sys.make.text(backButtonConfig);
+        let deleteButton = this.sys.make.text(deleteButtonConfig);
 
-    backButton.setInteractive();
-    backButton.on('pointerdown', back, this);
+        deleteButton.setInteractive();
+        deleteButton.on('pointerdown', function(event){
+            this.deleteToken.call(this, event, token);
+        });
+    }
 
-    let deleteButtonConfig = {
-        x: 300,
-        y: 500,
-        padding: 10,
-        origin: { x: 0.5, y: 0.5},
-        text: 'Delete',
-        style: deleteStyle
-    };
+    back() {
+        this.scene.stop('unit');
+        this.scene.start('boot');
+    }
 
-    var deleteButton = this.sys.make.text(deleteButtonConfig);
-
-    deleteButton.setInteractive();
-    deleteButton.on('pointerdown', function(event){
-        deleteToken.call(scene, event, token);
-    });
-}
-
-const unitScene = {
-    key: 'unit',
-    active: false,
-    init: (config) => {
-        console.log('[UNIT] init', config);
-    },
-    preload: preload,
-    create: create,
-    update: () => {
-
+    deleteToken(event, token) {
+        let game = this;
+        let tokenService = new TokenService("42"); // Kovan
+        game.scene.start('transaction', {
+            method: tokenService.delete(token),
+            completion: function(receipt) {
+                tokenService.list().then(function(tokens){
+                    game.scene.stop('transaction');
+                    game.scene.start('crew', { tokens: tokens });
+                });
+            }
+        });
     }
 };
-
-export default unitScene;

@@ -1,4 +1,4 @@
-pragma solidity 0.4.19;
+pragma solidity ^0.4.19;
 
 import "./MintableNonFungibleToken.sol";
 
@@ -16,7 +16,7 @@ contract LimitedMintableNonFungibleToken is MintableNonFungibleToken {
     }
 
     function mint(uint256 _tokenId) public onlyNonexistentToken(_tokenId) {
-        require(ownerToTokensOwned[msg.sender].length < mintLimit); 
+        require(ownerToTokensOwned[msg.sender].length < mintLimit);
 
         _setTokenOwner(_tokenId, msg.sender);
         _addTokenToOwnersList(msg.sender, _tokenId);
