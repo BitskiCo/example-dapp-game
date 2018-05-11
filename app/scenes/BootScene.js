@@ -1,4 +1,5 @@
 import TokenService from '../services/TokenService.js';
+import BaseScene from './BaseScene.js';
 
 const labelStyle = {
     fontSize: '32px',
@@ -10,8 +11,8 @@ const labelStyle = {
 
 const labelConfig = {
     x: 300,
-    y: 100,
-    origin: { x: 0.5, y: 0.5 },
+    y: 0,
+    origin: { x: 0.5, y: 0 },
     padding: 10,
     text: 'Loading....',
     style: labelStyle
@@ -21,51 +22,41 @@ const whatsHappeningStyle = {
     backgroundColor: '#333333',
     font: '18px Arial',
     fill: 'white',
-    wordWrap: { width: 200 }
+    wordWrap: { width: 600 }
 }
 
-function create(config) {
-    let game = this;
+export default class BootScene extends BaseScene {
+    constructor() {
+        super({ key: 'boot', active: true });
+    }
 
-    this.make.text({
-        x: 580,
-        y: 0,
-        padding: 10,
-        text: "Whats Happening?\n\nWe are querying the ethereum network. If this takes a while something might be broken...",
-        style: whatsHappeningStyle
-    });
+    create(config) {
+        super.create(config);
+        let game = this;
 
-    this.make.text(labelConfig);
-
-    web3.eth.getAccounts().then((accounts) => {
-        return web3.eth.getBalance(accounts[0]);
-    }).then((balance) => {
-        return TokenService.currentNetwork().then(function(tokenService ){
-            return tokenService.list().then(function(tokens) {
-                if (tokens.length > 0 || balance > 0) {
-                    game.scene.start('crew', {tokenService: tokenService, tokens: tokens});
-                } else {
-                    game.scene.start('need-eth', {tokenService: tokenService, tokens: tokens});
-                }
-            });
+        this.make.text({
+            x: 0,
+            y: 600,
+            padding: 10,
+            origin: { x: 0, y: 1 },
+            text: "Whats Happening?\n\nWe are querying the ethereum network. If this takes a while something might be broken...",
+            style: whatsHappeningStyle
         });
+        this.make.text(labelConfig);
 
-    }).catch(console.alert);
-}
+        web3.eth.getAccounts().then((accounts) => {
+            return web3.eth.getBalance(accounts[0]);
+        }).then((balance) => {
+            return TokenService.currentNetwork().then(function(tokenService ){
+                return tokenService.list().then(function(tokens) {
+                    if (tokens.length > 0 || balance > 0) {
+                        game.scene.start('crew', {tokenService: tokenService, tokens: tokens});
+                    } else {
+                        game.scene.start('need-eth', {tokenService: tokenService, tokens: tokens});
+                    }
+                });
+            });
 
-const bootScene = {
-    key: 'boot',
-    active: true,
-    init: (config) => {
-        console.log('[BOOT] init', config);
-    },
-    preload: () => {
-        console.log('[BOOT] preload');
-    },
-    create: create,
-    update: () => {
-        // console.log('[BOOT] update');
+        }).catch(console.alert);
     }
 };
-
-export default bootScene;

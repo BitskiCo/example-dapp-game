@@ -23,13 +23,17 @@ export default class Game {
         parentElement.appendChild(this.gameEngine.canvas);
     }
 
-
+    resize() {
+        this.gameEngine.renderer.resize(window.innerHeight, window.innerWidth);
+        this.gameEngine.events.emit('resize');
+    }
 
     loadGame() {
+        const size = Math.min(600, window.innerWidth);
         const gameConfig = {
             type: Phaser.AUTO,
-            width: 800,
-            height: 600,
+            width: window.innerWidth,
+            height: window.innerHeight,
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -41,6 +45,12 @@ export default class Game {
             scene: [BootScene, CrewScene, UnitScene, TransactionScene, NeedEthScene]
         };
 
-        this.gameEngine = new Phaser.Game(gameConfig);
+        const game = new Phaser.Game(gameConfig);
+        this.gameEngine = game;
+
+        window.onresize = function() {
+            game.renderer.resize(window.innerWidth, window.innerHeight);
+            game.events.emit('resize');
+        };
     }
 }

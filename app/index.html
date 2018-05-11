@@ -1,23 +1,30 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Example DApp (Kovan)</title>
     <script src="./index.js"></script>
+    <link rel="stylesheet" href="./public/style.css">
+    <meta name="viewport" content="width=device-width">
   </head>
   <body>
-    <div style="position: absolute; left: 50%;">
-      <div style="position: relative; left: -50%;">
-          <h1>Example DApp (Kovan)</h1>
+    <div id="main">
+      <div class="container">
           <div id='signed-out' style='display:none'>
+            <h1>Example Dapp</h1>
+            <p>This is an example dapp that uses a game engine.</p>
+            <p>Please sign in to continue.</p>
             <div id='connect-button'></div>
             <div id='metamask-container' style='margin-top: 20px'>
               <button id='metamask-button'>Use Existing Web3 Provider</button>
             </div>
           </div>
-          <div id='signed-in' style='display:none'>
-            <div id='game'></div>
-            <div id='account'><p>Your Wallet Address: (Kovan) <i id='wallet-address'>...</i></p></div>
-            <div>You can get some ETH from the <a href="https://gitter.im/kovan-testnet/faucet">Kovan Faucet</a>. Just paste your address and a kind admin will send you some Kovan ETH.</div>
-          </div>
+      </div>
+      <div id='signed-in' style='display:none'>
+        <div id='game'></div>
+        <div id="get-eth">
+          <a href="#" id="copy-address">Copy Address</a>
+          <a href="https://gitter.im/kovan-testnet/faucet" target="_blank">Get ETH</a>
+        </div>
       </div>
     </div>
   </body>
