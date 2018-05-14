@@ -79,7 +79,7 @@ export default class UnitScene extends BaseScene {
         let deleteButton = this.sys.make.text(deleteButtonConfig);
 
         deleteButton.setInteractive();
-        deleteButton.on('pointerdown', function(event){
+        deleteButton.on('pointerdown', (event) => {
             this.deleteToken.call(this, event, token);
         });
     }

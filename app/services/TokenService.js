@@ -19,8 +19,8 @@ export default class TokenService {
     }
 
     /**
-     * Loads our contract from its ABI. 
-     * 
+     * Loads our contract from its ABI.
+     *
      * @param {string} networkID The network ID of the network we are deployed on.
      * @param {string} defaultAccount The account we will be sending from.
      */
@@ -44,13 +44,13 @@ export default class TokenService {
 
     /**
      * Deletes a token by transfering it to the contract address.
-     * 
+     *
      * @param {string} token the ID of the token we want to delete.
      */
     delete(token) {
         return this.contract.methods.transfer(this.contract._address, token);
     }
-    
+
     /**
      * Gets a list of all tokens owned by us.
      */
