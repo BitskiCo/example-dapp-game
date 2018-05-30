@@ -50,7 +50,10 @@ export default class UnitScene extends BaseScene {
         });
 
         let token = config.token;
-        let character = (token % 5) + 1;
+        let tokenNumber = web3.utils.toBN(token);
+        let numCharacters = web3.utils.toBN(5);
+        let characterIndex = tokenNumber.mod(numCharacters).toNumber();
+        let character = characterIndex + 1;
         this.sys.add.image(300, 300, 'character-' + character);
 
         let backButtonConfig = {
