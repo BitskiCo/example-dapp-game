@@ -80,8 +80,8 @@ export default class CrewScene extends BaseScene {
         let totalTokens = config.tokens.length;
 
         for (var i = 0; i < totalTokens; i++) {
-            let token = config.tokens[i];
-            let character = (token % 5) + 1;
+            let token = web3.utils.toBN(config.tokens[i]);
+            let character = token.mod(web3.utils.toBN(5)).toNumber() + 1;
             let characterPosition = characterPositions[i];
             let characterImage = this.physics.add.image(characterPosition[0], characterPosition[1], 'character-' + character);
             characterImage.setScale(0.7);
