@@ -24,7 +24,7 @@ window.addEventListener('load', function () {
     if (user && !user.expired) {
       showApp(bitski.getWeb3('kovan'));
     } else {
-      return bitski.signIn(3);
+      showLoginButton(bitski);
     }
   }).catch(function (error) {
     console.error(error);

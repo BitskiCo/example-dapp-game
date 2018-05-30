@@ -49,12 +49,14 @@ export default class UnitScene extends BaseScene {
             style: whatsHappeningStyle
         });
 
-        let token = config.token;
-        let tokenNumber = web3.utils.toBN(token);
-        let numCharacters = web3.utils.toBN(5);
-        let characterIndex = tokenNumber.mod(numCharacters).toNumber();
-        let character = characterIndex + 1;
-        this.sys.add.image(300, 300, 'character-' + character);
+        const token = config.token;
+        const tokenNumber = web3.utils.toBN(token);
+        const numCharacters = web3.utils.toBN(5);
+        const characterIndex = tokenNumber.mod(numCharacters);
+        const characterIndexNumber = characterIndex.toNumber();
+        const character = characterIndexNumber + 1;
+        const characterImageString = `character-${character}`;
+        const characterImage = this.sys.add.image(300, 300, characterImageString);
 
         let backButtonConfig = {
             x: 0,

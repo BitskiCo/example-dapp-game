@@ -98,7 +98,6 @@ export default class CrewScene extends BaseScene {
 
             characterImage.setInteractive();
             characterImage.on('pointerdown', function(pointer) {
-                game.scene.stop('crew');
                 game.scene.start('unit', { token: token });
             });
         }
