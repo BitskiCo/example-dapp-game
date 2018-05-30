@@ -38,7 +38,7 @@ export default class TokenService {
      * Creates a new token, as long as we are not over our limit.
      */
     mintNewToken() {
-        let randomTokenID = web3.utils.randomHex(256);
+        let randomTokenID = web3.utils.randomHex(32);
         return this.contract.methods.mint(randomTokenID);
     }
 
