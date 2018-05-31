@@ -10,12 +10,12 @@ const path = require('path');
  */
 
 // const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-
+const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	devtool: 'source-map',
-	entry: './app/index',
+	entry: './app/index.js',
 
 	output: {
 		filename: 'index.js',
@@ -37,20 +37,27 @@ module.exports = {
 		]
 	},
 
-	plugins: [new CopyWebpackPlugin([{
-			from: './app/callback.html',
-			to: "callback.html"
-		}, {
-			from: './app/index.html',
-			to: "index.html"
-		}, {
-			from: 'assets',
-			to: 'assets'
-		}, {
-		 from: 'public',
-			to: 'public'
-		}
-	]),
+	plugins: [
+		new HTMLWebpackPlugin({
+			title: 'Example Dapp',
+			template: './app/index.html',
+			hash: true
+		}),
+		new HTMLWebpackPlugin({
+			title: 'Example Dapp',
+			filename: 'callback.html',
+			template: './app/callback.html',
+			hash: true
+		}),
+		new CopyWebpackPlugin([
+			{
+				from: 'assets',
+				to: 'assets'
+			}, {
+			from: 'public',
+				to: 'public'
+			}
+		]),
 		new webpack.DefinePlugin({
 			'CANVAS_RENDERER': JSON.stringify(true),
 			'WEBGL_RENDERER': JSON.stringify(true)
