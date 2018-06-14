@@ -25,13 +25,24 @@ export default class TokenService {
      * @param {string} defaultAccount The account we will be sending from.
      */
     constructor(networkID, defaultAccount) {
-        this.contract = new web3.eth.Contract(lmnftArtifacts.abi, lmnftArtifacts.networks[networkID].address);
-        this.contract.setProvider(window.web3.currentProvider);
-        let account = defaultAccount || window.web3.eth.defaultAccount;
-        if (account) {
-            this.contract.defaultAccount = account;
-            this.contract.options.from = account;
+        if (lmnftArtifacts && lmnftArtifacts.abi) {
+            const abi = lmnftArtifacts.abi;
+            if (lmnftArtifacts.networks && lmnftArtifacts.networks[networkID] && lmnftArtifacts.networks[networkID].address) {
+                const address = lmnftArtifacts.networks[networkID].address;
+                this.contract = new web3.eth.Contract(abi, address);
+                this.contract.setProvider(window.web3.currentProvider);
+                let account = defaultAccount || window.web3.eth.defaultAccount;
+                if (account) {
+                    this.contract.defaultAccount = account;
+                    this.contract.options.from = account;
+                }
+            } else {
+                throw Error(`Contract not deployed on current network (${networkID}). Run truffle migrate first and try again.`);
+            }
+        } else {
+            throw Error('Contract not compiled or not found');
         }
+
     }
 
     /**
