@@ -3,6 +3,8 @@ import ClipboardJS from 'clipboard';
 import { Bitski } from 'bitski';
 
 import Web3 from 'web3';
+import Raven from 'raven-js';
+Raven.config('https://c0329520824f40c18c7a06caa394dee7@sentry.io/1226740').install();
 
 let url = new URL(window.location.href);
 let redirectURL = url.origin + "/callback.html";

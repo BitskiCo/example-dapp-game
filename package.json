@@ -19,6 +19,7 @@
         "node-sass": "^4.8.3",
         "npm": "^6.0.0",
         "phaser": "^3.6.0",
+        "raven-js": "^3.26.2",
         "raw-loader": "^0.5.1",
         "sass-loader": "^6.0.7",
         "style-loader": "^0.20.3",
