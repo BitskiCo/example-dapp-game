@@ -96,15 +96,16 @@ export default class UnitScene extends BaseScene {
 
     deleteToken(event, token) {
         let game = this;
-        let tokenService = new TokenService("42"); // Kovan
-        game.scene.start('transaction', {
-            method: tokenService.delete(token),
-            completion: function(receipt) {
-                tokenService.list().then(function(tokens){
-                    game.scene.stop('transaction');
-                    game.scene.start('crew', { tokens: tokens });
-                });
-            }
+        TokenService.currentNetwork().then(tokenService => {
+            game.scene.start('transaction', {
+                method: tokenService.delete(token),
+                completion: function(receipt) {
+                    tokenService.list().then(function(tokens){
+                        game.scene.stop('transaction');
+                        game.scene.start('crew', { tokens: tokens });
+                    });
+                }
+            });
         });
     }
 };

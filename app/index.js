@@ -1,15 +1,16 @@
 import Game from './Game.js';
 import ClipboardJS from 'clipboard';
 import { Bitski } from 'bitski';
-
-import Web3 from 'web3';
 import Raven from 'raven-js';
-Raven.config('https://c0329520824f40c18c7a06caa394dee7@sentry.io/1226740').install();
+import Web3 from 'web3';
+
+if (SENTRY_DSN) {
+  Raven.config(SENTRY_DSN).install();
+}
 
 let url = new URL(window.location.href);
 let redirectURL = url.origin + "/callback.html";
-let bitski = new Bitski('F3YKmUz8wJPevbjd0LJOfSTkg4IiwWlcypE6AdBXweui1lhjC1kcGDgBCub35QkO', redirectURL);
-bitski.setLogger(console, 4);
+let bitski = new Bitski(BITSKI_CLIENT_ID, redirectURL);
 
 window.addEventListener('load', function () {
 
@@ -24,7 +25,7 @@ window.addEventListener('load', function () {
 
   bitski.getUser().then(function (user) {
     if (user && !user.expired) {
-      showApp(bitski.getWeb3('kovan'));
+      showApp(bitski.getWeb3(BITSKI_PROVIDER_ID));
     } else {
       showLoginButton(bitski);
     }
@@ -81,7 +82,7 @@ function showLoginButton(bitski) {
     }
 
     if (user) {
-      showApp(bitski.getWeb3('kovan'));
+      showApp(bitski.getWeb3(BITSKI_PROVIDER_ID));
     }
   }
 

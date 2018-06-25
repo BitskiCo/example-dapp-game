@@ -1,66 +1,76 @@
 const webpack = require('webpack');
 const path = require('path');
-
-/*
- * We've enabled UglifyJSPlugin for you! This minifies your app
- * in order to load faster and run less javascript.
- *
- * https://github.com/webpack-contrib/uglifyjs-webpack-plugin
- *
- */
-
-// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const truffleConfig = require('./truffle.js');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-module.exports = {
-	devtool: 'source-map',
-	entry: './app/index.js',
 
-	output: {
-		filename: 'index.js',
-		path: path.resolve(__dirname, 'dist')
-	},
-	module: {
-		rules: [{
-				test: [/\.vert$/, /\.frag$/],
-				use: 'raw-loader'
-			}, {
-				test: /\.js$/,
-				exclude: /node_modules/,
-				loader: 'babel-loader',
+const BITSKI_CLIENT_ID = 'F3YKmUz8wJPevbjd0LJOfSTkg4IiwWlcypE6AdBXweui1lhjC1kcGDgBCub35QkO';
 
-				options: {
-					presets: ['env']
-				}
-			}
-		]
-	},
+module.exports = env => {
+  let providerID;
 
-	plugins: [
-		new HTMLWebpackPlugin({
-			title: 'Example Dapp',
-			template: './app/index.html',
-			hash: true
-		}),
-		new HTMLWebpackPlugin({
-			title: 'Example Dapp',
-			filename: 'callback.html',
-			template: './app/callback.html',
-			hash: true
-		}),
-		new CopyWebpackPlugin([
-			{
-				from: 'assets',
-				to: 'assets'
-			}, {
-			from: 'public',
-				to: 'public'
-			}
-		]),
-		new webpack.DefinePlugin({
-			'CANVAS_RENDERER': JSON.stringify(true),
-			'WEBGL_RENDERER': JSON.stringify(true)
-		})
-	]
+  switch (env.network) {
+  case undefined:
+  case 'development':
+    providerID = `http://${truffleConfig.networks.development.host}:${truffleConfig.networks.development.port}`;
+    break;
+  default:
+    providerID = env.network;
+  }
+
+  return {
+    devtool: 'source-map',
+    entry: './app/index.js',
+
+    output: {
+      filename: 'index.js',
+      path: path.resolve(__dirname, 'dist')
+    },
+    module: {
+      rules: [{
+          test: [/\.vert$/, /\.frag$/],
+          use: 'raw-loader'
+        }, {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
+
+          options: {
+            presets: ['env']
+          }
+        }
+      ]
+    },
+
+    plugins: [
+      new HTMLWebpackPlugin({
+        title: 'Example Dapp',
+        template: './app/index.html',
+        hash: true
+      }),
+      new HTMLWebpackPlugin({
+        title: 'Example Dapp',
+        filename: 'callback.html',
+        template: './app/callback.html',
+        hash: true
+      }),
+      new CopyWebpackPlugin([
+        {
+          from: 'assets',
+          to: 'assets'
+        }, {
+        from: 'public',
+          to: 'public'
+        }
+      ]),
+      new webpack.DefinePlugin({
+        'CANVAS_RENDERER': JSON.stringify(true),
+        'WEBGL_RENDERER': JSON.stringify(true),
+        'BITSKI_PROVIDER_ID': JSON.stringify(providerID),
+        'BITSKI_CLIENT_ID': JSON.stringify(BITSKI_CLIENT_ID),
+        'SENTRY_DSN': JSON.stringify(env.sentryDSN || false)
+      })
+    ]
+  }
 };

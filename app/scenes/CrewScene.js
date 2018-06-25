@@ -51,16 +51,16 @@ export default class CrewScene extends BaseScene {
 
     mintToken(pointer) {
         let game = this;
-        let tokenService = new TokenService("42"); // Kovan
-
-        game.scene.start('transaction', {
-            method: tokenService.mintNewToken(),
-            completion: function(receipt) {
-                tokenService.list().then(function(tokens){
-                    game.scene.stop('transaction');
-                    game.scene.start('crew', { tokens: tokens });
-                });
-            }
+        TokenService.currentNetwork().then(tokenService => {
+            game.scene.start('transaction', {
+                method: tokenService.mintNewToken(),
+                completion: function(receipt) {
+                    tokenService.list().then(function(tokens){
+                        game.scene.stop('transaction');
+                        game.scene.start('crew', { tokens: tokens });
+                    });
+                }
+            });
         });
     }
 

@@ -1,17 +1,19 @@
 {
     "scripts": {
-        "build": "truffle migrate; webpack",
-        "build-kovan": "truffle migrate --network kovan; webpack",
+        "build": "truffle migrate; webpack --env.network mainnet",
+        "build-kovan": "truffle migrate --network kovan; webpack --env.network kovan",
+        "build-rinkeby": "truffle migrate --network rinkeby; webpack --env.network rinkeby",
         "debug": "truffle debug",
         "debug-kovan": "truffle --network kovan debug",
+        "debug-rinkeby": "truffle --network rinkeby debug",
         "test": "truffle test",
-        "dev": "webpack-dev-server --mode development --port 3000"
+        "dev": "webpack-dev-server --mode development --port 3000 --env.network development"
     },
     "dependencies": {
         "babel-core": "^6.26.0",
         "babel-loader": "^7.1.4",
         "babel-preset-env": "^1.6.1",
-        "bitski": "^0.1.5",
+        "bitski": "^0.1.7",
         "clipboard": "^2.0.1",
         "copy-webpack-plugin": "^4.5.1",
         "css-loader": "^0.28.11",
@@ -27,6 +29,7 @@
         "webpack": "^4.6.0"
     },
     "devDependencies": {
+        "bitski-truffle-provider": "^0.1.0",
         "html-webpack-plugin": "^3.2.0",
         "truffle": "^4.1.7",
         "webpack-cli": "^2.0.14",

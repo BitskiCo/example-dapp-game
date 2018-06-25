@@ -71,17 +71,17 @@ export default class TransactionScene extends BaseScene {
     }
 
     send(method, message, completion) {
-        method.send({gas: 7000000})
+        method.send({ gas: 700000 })
         .on('transactionHash', function (hash) {
            message.setText('Waiting for first confirmation.');
         })
         .on('confirmation', function (confirmationNumber, receipt) {
-            if (confirmationNumber >= 24) {
+            if (confirmationNumber >= 3) {
                 if (completion) {
                     completion(receipt);
                 }
             } else {
-                message.setText('Got confirmation ' + confirmationNumber + ", waiting for 24.");
+                message.setText('Got confirmation ' + confirmationNumber + ", waiting for 3.");
             }
         })
         .on('error', (error) => {
