@@ -11,7 +11,7 @@ module.exports = env => {
   const bitskiClientId = BitskiConfig.app.id;
   const bitskiNetworkId = BitskiConfig.networkIds[currentNetwork];
   const bitskiRedirectURL = BitskiConfig.environments[environment].redirectURL;
-  const sentryDSN = BitskiConfig.app.sentryDSN || false;
+  const sentryDSN = environment == 'production' && BitskiConfig.app.sentryDSN || false;
   const devtool = environment == 'development' ? 'source-map' : false;
 
   return {

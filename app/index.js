@@ -10,32 +10,37 @@ if (SENTRY_DSN) {
 
 let bitski = new Bitski(BITSKI_CLIENT_ID, BITSKI_REDIRECT_URL);
 
-window.addEventListener('load', function () {
+if (window.location.pathname === '/callback.html') {
+  initializeCallbackPage();
+} else {
+  initializeMainPage();
+}
 
-  configureMetamaskButton();
-
-  if (window.location.pathname === '/callback.html') {
-    if (window.opener) {
-      bitski.signInCallback();
-    } else {
-      bitski.signInCallback(3);
-    }
-    return;
-  }
-
-  let clipboard = new ClipboardJS('#copy-address');
-
-  bitski.getUser().then(function (user) {
-    if (user && !user.expired) {
-      showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
-    } else {
+function initializeMainPage() {
+  window.addEventListener('load', function() {
+    // Setup ClipboardJS
+    let clipboard = new ClipboardJS('#copy-address');
+    // Setup Metamask Button
+    configureMetamaskButton();
+    // Setup Bitski
+    bitski.getUser().then(function (user) {
+      if (user && !user.expired) {
+        showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
+      } else {
+        showLoginButton(bitski);
+      }
+    }).catch(function (error) {
+      console.error(error);
       showLoginButton(bitski);
-    }
-  }).catch(function (error) {
-    console.error(error);
-    showLoginButton(bitski);
+    });
   });
-});
+}
+
+function initializeCallbackPage() {
+  window.addEventListener('load', function() {
+    bitski.signInCallback();
+  });
+}
 
 function showApp(provider) {
   window.web3 = new Web3(provider);
