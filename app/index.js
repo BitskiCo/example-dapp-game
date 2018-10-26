@@ -25,7 +25,7 @@ window.addEventListener('load', function () {
 
   bitski.getUser().then(function (user) {
     if (user && !user.expired) {
-      showApp(bitski.getWeb3(BITSKI_PROVIDER_ID));
+      showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
     } else {
       showLoginButton(bitski);
     }
@@ -35,8 +35,8 @@ window.addEventListener('load', function () {
   });
 })
 
-function showApp(web3) {
-  window.web3 = web3;
+function showApp(provider) {
+  window.web3 = new Web3(provider);
 
   document.getElementById('signed-out').style.display = 'none';
   document.getElementById('signed-in').style.display = 'block';
@@ -82,7 +82,7 @@ function showLoginButton(bitski) {
     }
 
     if (user) {
-      showApp(bitski.getWeb3(BITSKI_PROVIDER_ID));
+      showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
     }
   }
 
