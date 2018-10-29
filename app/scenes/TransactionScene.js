@@ -76,12 +76,12 @@ export default class TransactionScene extends BaseScene {
            message.setText('Waiting for first confirmation.');
         })
         .on('confirmation', function (confirmationNumber, receipt) {
-            if (confirmationNumber >= 3) {
+            if (confirmationNumber >= 2) {
                 if (completion) {
                     completion(receipt);
                 }
             } else {
-                message.setText('Got confirmation ' + confirmationNumber + ", waiting for 3.");
+                message.setText('Got confirmation ' + confirmationNumber + ", waiting for 2.");
             }
         })
         .on('error', (error) => {
