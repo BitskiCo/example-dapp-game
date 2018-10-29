@@ -1,26 +1,21 @@
 const webpack = require('webpack');
 const path = require('path');
-const truffleConfig = require('./truffle.js');
+const BitskiConfig = require('./bitski.config.js');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-
-const BITSKI_CLIENT_ID = 'F3YKmUz8wJPevbjd0LJOfSTkg4IiwWlcypE6AdBXweui1lhjC1kcGDgBCub35QkO';
-
 module.exports = env => {
-  let providerID;
-
-  switch (env.network) {
-  case undefined:
-  case 'development':
-    providerID = `http://${truffleConfig.networks.development.host}:${truffleConfig.networks.development.port}`;
-    break;
-  default:
-    providerID = env.network;
-  }
+  // Configuration options
+  const environment = process.env.NODE_ENV || 'development';
+  const currentNetwork = BitskiConfig.environments[environment].network;
+  const bitskiClientId = BitskiConfig.app.id;
+  const bitskiNetworkId = BitskiConfig.networkIds[currentNetwork];
+  const bitskiRedirectURL = BitskiConfig.environments[environment].redirectURL;
+  const sentryDSN = BitskiConfig.app.sentryDSN || false;
+  const devtool = environment == 'development' ? 'source-map' : false;
 
   return {
-    devtool: 'source-map',
+    devtool: devtool,
     entry: './app/index.js',
 
     output: {
@@ -67,9 +62,10 @@ module.exports = env => {
       new webpack.DefinePlugin({
         'CANVAS_RENDERER': JSON.stringify(true),
         'WEBGL_RENDERER': JSON.stringify(true),
-        'BITSKI_PROVIDER_ID': JSON.stringify(providerID),
-        'BITSKI_CLIENT_ID': JSON.stringify(BITSKI_CLIENT_ID),
-        'SENTRY_DSN': JSON.stringify(env.sentryDSN || false)
+        'BITSKI_PROVIDER_ID': JSON.stringify(bitskiNetworkId),
+        'BITSKI_CLIENT_ID': JSON.stringify(bitskiClientId),
+        'BITSKI_REDIRECT_URL': JSON.stringify(bitskiRedirectURL),
+        'SENTRY_DSN': JSON.stringify(sentryDSN)
       })
     ]
   }
