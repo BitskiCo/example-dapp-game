@@ -8,9 +8,7 @@ if (SENTRY_DSN) {
   Raven.config(SENTRY_DSN).install();
 }
 
-let url = new URL(window.location.href);
-let redirectURL = url.origin + "/callback.html";
-let bitski = new Bitski(BITSKI_CLIENT_ID, redirectURL);
+let bitski = new Bitski(BITSKI_CLIENT_ID, BITSKI_REDIRECT_URL);
 
 window.addEventListener('load', function () {
 
@@ -33,7 +31,7 @@ window.addEventListener('load', function () {
     console.error(error);
     showLoginButton(bitski);
   });
-})
+});
 
 function showApp(provider) {
   window.web3 = new Web3(provider);
@@ -48,28 +46,6 @@ function showApp(provider) {
     }
   });
 }
-
-
-const copyToClipboard = str => {
-  const el = document.createElement('textarea');
-  el.value = str;
-  el.contenteditable = true;
-  el.readonly = false;
-  el.style.position = 'absolute';
-  el.style.left = '-9999px';
-  document.body.appendChild(el);
-  const selected =
-    document.getSelection().rangeCount > 0
-      ? document.getSelection().getRangeAt(0)
-      : false;
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
-  if (selected) {
-    document.getSelection().removeAllRanges();
-    document.getSelection().addRange(selected);
-  }
-};
 
 function showLoginButton(bitski) {
   document.getElementById('signed-out').style.display = 'block';

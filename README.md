@@ -4,9 +4,19 @@ Check out our running example [here](https://example-dapp-1.bitski.com/)
 
 ![Screenshot](assets/screenshot.png)
 
+## Create your credentials
+
+You'll need an app id to actually run this demo. Visit https://developer.bitski.com/ and click "Create App". You can enter anything for the name and leave the url blank for now.
+
+Once your app is created, view your app details, then go to the OAuth settings, and under Redirect Urls, add the following:
+
+http://localhost:3000/callback.html
+
+At this point, your Bitski app should be ready to go. Copy the app id from the app details page, and paste it into your bitski.config.example.js where it says `YOUR-APP-ID-HERE`, and rename the file to bitski.config.js.
+
 ## Running Locally
 
-First, install the dependencies.
+Now you should be ready to run the demo app locally. First, install the dependencies.
 
 ```bash
 npm install
@@ -42,26 +52,50 @@ Then browse to [http://localhost:3000](http://localhost:3000) to interact with t
 
 ## Deploying to a real network
 
-Once you have your dapp how you want it, you'll want to deploy it to a live blockchain somewhere. This can be achieved using a local Ethereum node, or Bitski's app wallet feature.
-To use Bitski's app wallet, you'll need to request access to this feature. Once you have an app wallet, find the client id and secret.
+Once you have your dapp how you want it, you'll want to deploy it to a live blockchain somewhere. This can be achieved using a local Ethereum node, or with Bitski's app wallet feature.
 
-Modify your `truffle.js` to look like `truffle.example.js`, filling in the client id and secret. Make sure not to expose these keys anywhere as they give access to your wallet.
+To use Bitski to deploy your contract, you'll need to create an App Wallet. Visit the [developer portal](https://developer.bitski.com), find your app in the list, and click it to view the details.
 
-Next, you'll want to build the app with webpack, and migrate your contracts to the network you desire:
+Under the Wallets tab, click _New Wallet_. Then, visit the _Backend Credentials_ tab and click _New Credential_. You'll want to copy and paste both the credential id, and secret into your `bitski.config.js` under the `appWallet` section.
 
+At this point, you should be ready to deploy your contracts.
+
+_Note: Make sure you have some ETH in your new app wallet before you try to migrate. The exact amount of ETH you will need depends on the contract._
+
+To migrate your contract, decide which network you want to use, then run:
+
+Mainnet:
 ```bash
-# mainnet
-npm run build
-
-# build for kovan. see package.json for more options
-npm run build-kovan
+truffle migrate
 ```
 
-## Client ID
+Kovan:
+```bash
+truffle migrate --network kovan
+```
 
-If you want to deploy your version of this dapp somewhere, you'll need to create a Bitski app, and enter the client id in `webpack.config.js` under `BITSKI_CLIENT_ID`. Note that this is **not** the same as your app wallet client id.
+Rinkeby:
+```bash
+truffle migrate --network rinkeby
+```
 
-## Modifying the Contract
+Once you've deployed your contract, update your `bitski.config.js` to reflect your network choice. Edit the network name under environments. This will make sure the web app will know what network to look for.
+
+_Note: You can configure networks for both development and production separately. You have the option to use a local test network for development, or once the contract is deployed, you can also develop against a real network. `npm run dev` will use the development options, and `npm run build` will use the production options._
+
+## Deploying the web assets
+
+If you want to host your version of this dapp somewhere publicly, make sure to add the proper redirect url to both your `bitski.config.js` and your app on the Bitski Developer Portal. You won't be able to log in unless the redirect url passed in exactly matches what is listed in your app's settings.
+
+To build the app for production, simply run:
+
+```bash
+npm run build
+```
+
+The app will be compiled into the `./dist` directory. You should be able to simply drop these assets on any standard web server to host.
+
+## Modifying the Smart Contract
 
 The backend of our dapp is a contract on Ethereum. The code of this contract is located in [contracts](contracts/).
 

@@ -1,13 +1,8 @@
 {
     "scripts": {
-        "build": "truffle migrate; webpack --env.network mainnet",
-        "build-kovan": "truffle migrate --network kovan; webpack --env.network kovan",
-        "build-rinkeby": "truffle migrate --network rinkeby; webpack --env.network rinkeby",
-        "debug": "truffle debug",
-        "debug-kovan": "truffle --network kovan debug",
-        "debug-rinkeby": "truffle --network rinkeby debug",
+        "build": "NODE_ENV=production webpack",
         "test": "truffle test",
-        "dev": "webpack-dev-server --mode development --port 3000 --env.network development"
+        "dev": "webpack-dev-server --mode development --port 3000"
     },
     "dependencies": {
         "babel-core": "^6.26.0",
