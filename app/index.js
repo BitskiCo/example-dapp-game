@@ -15,10 +15,10 @@ window.addEventListener('load', function () {
   configureMetamaskButton();
 
   if (window.location.pathname === '/callback.html') {
-    if (window.parent) {
-      bitski.signInCallback(3);
-    } else {
+    if (window.opener) {
       bitski.signInCallback();
+    } else {
+      bitski.signInCallback(3);
     }
     return;
   }
