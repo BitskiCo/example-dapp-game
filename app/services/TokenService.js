@@ -13,7 +13,7 @@ export default class TokenService {
     static currentNetwork() {
         return web3.eth.net.getId().then(function(networkID){
             return web3.eth.getAccounts().then(function(accounts){
-                return new TokenService(networkID, accounts[0]);
+                return new TokenService(networkID, accounts[0], 'https://example-dapp-2-api.bitski.com/tokens/');
             });
         });
     }
@@ -23,8 +23,10 @@ export default class TokenService {
      *
      * @param {string} networkID The network ID of the network we are deployed on.
      * @param {string} defaultAccount The account we will be sending from.
+     * @param {string} tokenURIBaseURL The base url to use for token URIs
      */
-    constructor(networkID, defaultAccount) {
+    constructor(networkID, defaultAccount, tokenURIBaseURL) {
+        this.tokenURIBaseURL = tokenURIBaseURL;
         if (lmnftArtifacts && lmnftArtifacts.abi) {
             const abi = lmnftArtifacts.abi;
             if (lmnftArtifacts.networks && lmnftArtifacts.networks[networkID] && lmnftArtifacts.networks[networkID].address) {
@@ -50,7 +52,8 @@ export default class TokenService {
      */
     mintNewToken() {
         let randomTokenID = web3.utils.randomHex(32);
-        return this.contract.methods.mint(randomTokenID);
+        const tokenIdString = web3.utils.hexToNumberString(randomTokenID);
+        return this.contract.methods.mintWithTokenURI(this.contract.defaultAccount, randomTokenID, `${this.tokenURIBaseURL}${tokenIdString}`);
     }
 
     /**
@@ -59,14 +62,24 @@ export default class TokenService {
      * @param {string} token the ID of the token we want to delete.
      */
     delete(token) {
-        return this.contract.methods.transfer(this.contract._address, token);
+        return this.contract.methods.burn(token);
     }
 
     /**
      * Gets a list of all tokens owned by us.
      */
     list() {
-        return this.contract.methods.getOwnerTokens(this.contract.defaultAccount).call();
+        return this.balance().then(balance => {
+            var promises = [];
+            for (var i=0; i < balance; i++) {
+                promises.push(this.contract.methods.tokenOfOwnerByIndex(this.contract.defaultAccount, i).call().then(tokenId => {
+                    return this.contract.methods.imageId(tokenId).call().then(imageId => {
+                        return { id: tokenId, imageId: imageId };
+                    });
+                }));
+            }
+            return Promise.all(promises);
+        });
     }
 
     /**

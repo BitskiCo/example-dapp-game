@@ -50,11 +50,7 @@ export default class UnitScene extends BaseScene {
         });
 
         const token = config.token;
-        const tokenNumber = web3.utils.toBN(token);
-        const numCharacters = web3.utils.toBN(5);
-        const characterIndex = tokenNumber.mod(numCharacters);
-        const characterIndexNumber = characterIndex.toNumber();
-        const character = characterIndexNumber + 1;
+        const character = token.imageId;
         const characterImageString = `character-${character}`;
         const characterImage = this.sys.add.image(300, 300, characterImageString);
 
@@ -98,7 +94,7 @@ export default class UnitScene extends BaseScene {
         let game = this;
         TokenService.currentNetwork().then(tokenService => {
             game.scene.start('transaction', {
-                method: tokenService.delete(token),
+                method: tokenService.delete(token.id),
                 completion: function(receipt) {
                     tokenService.list().then(function(tokens){
                         game.scene.stop('transaction');

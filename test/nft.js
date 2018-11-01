@@ -2,11 +2,11 @@
 var LimitedMintableNonFungibleToken = artifacts.require("LimitedMintableNonFungibleToken");
 
 contract('LimitedMintableNonFungibleToken', function(accounts) {
-    it("should implement ERC721", function(){
+    it("should implement ERC721 interface", function(){
         return LimitedMintableNonFungibleToken.deployed().then(function(instance) {
-            return instance.implementsERC721()
-        }).then(function(balance) {
-            assert.equal(balance.valueOf(), true, "Doesn't implement ERC721");
+            return instance.supportsInterface('0x80ac58cd');
+        }).then(result => {
+            assert.equal(result.valueOf(), true, "Doesn't implement ERC721");
         });
     });
 
@@ -38,6 +38,16 @@ contract('LimitedMintableNonFungibleToken', function(accounts) {
                 return instance.balanceOf(accounts[1]);
             }).then(function(balance) {
                 assert.equal(balance.valueOf(), 2, "Second account should have 2 tokens");
+            });
+        });
+    });
+
+    it("should properly return image id", function() {
+        return LimitedMintableNonFungibleToken.deployed().then(function(instance) {
+            return instance.mint(9, {from: accounts[0]}).then(result => {
+                return instance.imageId(9);
+            }).then(imageId => {
+                assert.equal(imageId.valueOf(), 5, "imageId should return proper value");
             });
         });
     });
