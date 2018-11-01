@@ -14,7 +14,7 @@ module.exports = env => {
   const sentryDSN = environment == 'production' && BitskiConfig.app.sentryDSN || false;
   const devtool = environment == 'development' ? 'source-map' : false;
 
-  const tokenURIBaseURL = 'https://example-dapp-1-backend.bitski.com/tokens/'; //Change this to your backend. Token id will be appended.
+  const tokenURIBaseURL = 'https://example-dapp-1-api.bitski.com/tokens/'; //Change this to your backend. Token id will be appended.
 
   return {
     devtool: devtool,
