@@ -51,6 +51,7 @@ function showApp(provider) {
 
   web3.eth.getAccounts().then((accounts) => {
     if (accounts[0]) {
+      document.getElementById('your-address').innerText = accounts[0];
       document.getElementById('copy-address').dataset['clipboardText'] = accounts[0];
     }
   });

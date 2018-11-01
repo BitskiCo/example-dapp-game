@@ -95,6 +95,10 @@ npm run build
 
 The app will be compiled into the `./dist` directory. You should be able to simply drop these assets on any standard web server to host.
 
+## Token Metadata
+
+ERC721 tokens support various metadata by providing a URL for the token that includes structured information in json. This is stored on the blockchain when each token is minted. Update the `tokenURIBaseURL` value in webpack.config.js to provide a valid url if you would like to use this functionality.
+
 ## Modifying the Smart Contract
 
 The backend of our dapp is a contract on Ethereum. The code of this contract is located in [contracts](contracts/).

@@ -13,7 +13,7 @@ export default class TokenService {
     static currentNetwork() {
         return web3.eth.net.getId().then(function(networkID){
             return web3.eth.getAccounts().then(function(accounts){
-                return new TokenService(networkID, accounts[0], 'https://example-dapp-2-api.bitski.com/tokens/');
+                return new TokenService(networkID, accounts[0], TOKEN_URI_BASE_URL);
             });
         });
     }
