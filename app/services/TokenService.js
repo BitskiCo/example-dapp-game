@@ -31,6 +31,7 @@ export default class TokenService {
             const abi = lmnftArtifacts.abi;
             if (lmnftArtifacts.networks && lmnftArtifacts.networks[networkID] && lmnftArtifacts.networks[networkID].address) {
                 const address = lmnftArtifacts.networks[networkID].address;
+                this.address = address;
                 this.contract = new web3.eth.Contract(abi, address);
                 this.contract.setProvider(window.web3.currentProvider);
                 let account = defaultAccount || window.web3.eth.defaultAccount;

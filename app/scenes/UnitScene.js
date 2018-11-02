@@ -54,6 +54,13 @@ export default class UnitScene extends BaseScene {
         const characterImageString = `character-${character}`;
         const characterImage = this.sys.add.image(300, 300, characterImageString);
 
+        characterImage.setInteractive();
+        characterImage.on('pointerdown', () => {
+            this.input.addUpCallback(function () {
+                window.open(`https://rinkeby.opensea.io/assets/${config.tokenService.address}/${token.id}`, '_blank');
+            }, true);
+        });
+
         let backButtonConfig = {
             x: 0,
             y: 0,
@@ -66,7 +73,7 @@ export default class UnitScene extends BaseScene {
         let backButton = this.sys.make.text(backButtonConfig);
 
         backButton.setInteractive();
-        backButton.on('pointerdown', this.back, this);
+        backButton.on('pointerup', this.back, this);
 
         let deleteButtonConfig = {
             x: 600,
@@ -80,7 +87,7 @@ export default class UnitScene extends BaseScene {
         let deleteButton = this.sys.make.text(deleteButtonConfig);
 
         deleteButton.setInteractive();
-        deleteButton.on('pointerdown', (event) => {
+        deleteButton.on('pointerup', (event) => {
             this.deleteToken.call(this, event, token);
         });
     }

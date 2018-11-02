@@ -95,8 +95,8 @@ export default class CrewScene extends BaseScene {
             characterImage.setCollideWorldBounds(true);
 
             characterImage.setInteractive();
-            characterImage.on('pointerdown', function(pointer) {
-                game.scene.start('unit', { token: token });
+            characterImage.on('pointerup', function(pointer) {
+                game.scene.start('unit', { token: token, tokenService: config.tokenService });
             });
         }
 
@@ -137,7 +137,7 @@ export default class CrewScene extends BaseScene {
 
             let button = this.sys.make.text(buttonConfig);
             button.setInteractive();
-            button.on('pointerdown', this.mintToken, this);
+            button.on('pointerup', this.mintToken, this);
         }
     }
 };
