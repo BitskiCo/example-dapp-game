@@ -12,6 +12,10 @@ body {
   max-width: 600px;
 }
 
+#error {
+  color: #b10009;
+}
+
 a {
   color: #fff;
   font-weight: 600;

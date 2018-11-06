@@ -64,6 +64,7 @@ function showLoginButton(bitski) {
   var connectButton = bitski.getConnectButton(document.getElementById('connect-button'));
   connectButton.callback = function (error, user) {
     if (error) {
+      document.getElementById('error').innerText = (error && error.message) || error
       console.error(error);
     }
 
