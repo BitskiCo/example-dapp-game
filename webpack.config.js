@@ -8,6 +8,7 @@ module.exports = env => {
   // Configuration options
   const environment = process.env.NODE_ENV || 'development';
   const currentNetwork = BitskiConfig.environments[environment].network;
+  const currentNetId = BitskiConfig.environments[environment].netId;
   const bitskiClientId = BitskiConfig.app.id;
   const bitskiNetworkId = BitskiConfig.networkIds[currentNetwork];
   const bitskiRedirectURL = BitskiConfig.environments[environment].redirectURL;
@@ -46,12 +47,6 @@ module.exports = env => {
         template: './app/index.html',
         hash: true
       }),
-      new HTMLWebpackPlugin({
-        title: 'Example Dapp',
-        filename: 'callback.html',
-        template: './app/callback.html',
-        hash: true
-      }),
       new CopyWebpackPlugin([
         {
           from: 'assets',
@@ -65,6 +60,8 @@ module.exports = env => {
         'CANVAS_RENDERER': JSON.stringify(true),
         'WEBGL_RENDERER': JSON.stringify(true),
         'BITSKI_PROVIDER_ID': JSON.stringify(bitskiNetworkId),
+        'EXPECTED_NETWORK_NAME': JSON.stringify(bitskiNetworkId),
+        'EXPECTED_NETWORK_ID': JSON.stringify(currentNetId),
         'BITSKI_CLIENT_ID': JSON.stringify(bitskiClientId),
         'BITSKI_REDIRECT_URL': JSON.stringify(bitskiRedirectURL),
         'TOKEN_URI_BASE_URL': JSON.stringify(tokenURIBaseURL),

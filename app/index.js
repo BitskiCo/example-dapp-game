@@ -1,6 +1,6 @@
 import Game from './Game.js';
 import ClipboardJS from 'clipboard';
-import { Bitski } from 'bitski';
+import { Bitski, AuthenticationStatus } from 'bitski';
 import Raven from 'raven-js';
 import Web3 from 'web3';
 
@@ -10,49 +10,42 @@ if (SENTRY_DSN) {
 
 let bitski = new Bitski(BITSKI_CLIENT_ID, BITSKI_REDIRECT_URL);
 
-if (window.location.pathname === '/callback.html') {
-  initializeCallbackPage();
-} else {
-  initializeMainPage();
-}
+window.addEventListener('load', function() {
+  // Setup ClipboardJS
+  let clipboard = new ClipboardJS('#copy-address');
 
-function initializeMainPage() {
-  window.addEventListener('load', function() {
-    // Setup ClipboardJS
-    let clipboard = new ClipboardJS('#copy-address');
-    // Setup Metamask Button
-    configureMetamaskButton();
-    // Setup Bitski
-    bitski.getUser().then(function (user) {
-      if (user && !user.expired) {
-        showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
-      } else {
-        showLoginButton(bitski);
-      }
-    }).catch(function (error) {
-      console.error(error);
+  // Setup Metamask Button
+  configureMetamaskButton();
+
+  // Setup Bitski
+  bitski.getAuthStatus().then((authStatus) => {
+    if (authStatus == AuthenticationStatus.Connected) {
+      showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
+    } else {
       showLoginButton(bitski);
-    });
+    }
+  }).catch(function (error) {
+    console.error(error);
+    showLoginButton(bitski);
   });
-}
-
-function initializeCallbackPage() {
-  window.addEventListener('load', function() {
-    bitski.signInCallback();
-  });
-}
+});
 
 function showApp(provider) {
   window.web3 = new Web3(provider);
+  web3.eth.net.getId().then(netId => {
+    if (netId !== EXPECTED_NETWORK_ID) {
+      alert(`Please set your network to ${EXPECTED_NETWORK_NAME}`);
+    } else {
+      document.getElementById('signed-out').style.display = 'none';
+      document.getElementById('signed-in').style.display = 'block';
+      window.game = new Game(document.getElementById('game'), web3);
 
-  document.getElementById('signed-out').style.display = 'none';
-  document.getElementById('signed-in').style.display = 'block';
-  window.game = new Game(document.getElementById('game'), web3);
-
-  web3.eth.getAccounts().then((accounts) => {
-    if (accounts[0]) {
-      document.getElementById('your-address').innerText = accounts[0];
-      document.getElementById('copy-address').dataset['clipboardText'] = accounts[0];
+      web3.eth.getAccounts().then((accounts) => {
+        if (accounts[0]) {
+          document.getElementById('your-address').innerText = accounts[0];
+          document.getElementById('copy-address').dataset['clipboardText'] = accounts[0];
+        }
+      });
     }
   });
 }
@@ -61,8 +54,7 @@ function showLoginButton(bitski) {
   document.getElementById('signed-out').style.display = 'block';
   document.getElementById('signed-in').style.display = 'none';
 
-  var connectButton = bitski.getConnectButton(document.getElementById('connect-button'));
-  connectButton.callback = function (error, user) {
+  bitski.getConnectButton({ container: document.getElementById('connect-button') }, (error, user) => {
     if (error) {
       document.getElementById('error').innerText = (error && error.message) || error
       console.error(error);
@@ -71,9 +63,7 @@ function showLoginButton(bitski) {
     if (user) {
       showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
     }
-  }
-
-
+  });
 }
 
 function configureMetamaskButton() {
@@ -97,11 +87,12 @@ function configureMetamaskButton() {
     metamaskButton.style.paddingRight = '14px';
 
     metamaskButton.onclick = function() {
-      web3 = new Web3(web3.currentProvider)
-      showApp(web3);
+      window.ethereum.enable().then(() => {
+        showApp(window.ethereum);
+      });
     };
 
-    if (typeof(web3) !== 'undefined') {
+    if (window.ethereum) {
       metamaskButton.style.display = 'block';
     } else {
       metamaskButton.style.display = 'none';

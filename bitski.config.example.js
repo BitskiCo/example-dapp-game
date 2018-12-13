@@ -16,11 +16,13 @@ module.exports = {
   environments: {
     development: {
       network: 'development', //ethereum network to use for local dev
-      redirectURL: 'http://localhost:3000/callback.html' //url the popup will redirect to when logged in
+      redirectURL: 'http://localhost:3000/public/callback.html', //url the popup will redirect to when logged in
+      netId: 4447
     },
     production: {
-      network: 'kovan', //ethereum network to use for production
-      redirectURL: 'https://mydomain.com/callback.html' //url the popup will redirect to when logged in
+      network: 'rinkeby', //ethereum network to use for production
+      redirectURL: 'https://mydomain.com/public/callback.html', //url the popup will redirect to when logged in
+      netId: 4
     }
   },
   networkIds: {
