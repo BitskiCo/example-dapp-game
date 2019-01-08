@@ -12,7 +12,7 @@ Once your app is created, view your app details, then go to the OAuth settings, 
 
 http://localhost:3000/callback.html
 
-At this point, your Bitski app should be ready to go. Create a .env file in the root of this project, then copy the app id from the app details page, and paste it like this:
+At this point, your Bitski app should be ready to go. Create a `.env` file in the root of this project, then copy the app id from the app details page, and paste it like this:
 
 ```
 BITSKI_CLIENT_ID=YOUR-APP-ID
