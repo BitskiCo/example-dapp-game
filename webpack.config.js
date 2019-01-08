@@ -1,3 +1,4 @@
+require('dotenv').config();
 const webpack = require('webpack');
 const path = require('path');
 const BitskiConfig = require('./bitski.config.js');
@@ -9,10 +10,10 @@ module.exports = env => {
   const environment = process.env.NODE_ENV || 'development';
   const currentNetwork = BitskiConfig.environments[environment].network;
   const currentNetId = BitskiConfig.environments[environment].netId;
-  const bitskiClientId = BitskiConfig.app.id;
+  const bitskiClientId = process.env.BITSKI_CLIENT_ID;
   const bitskiNetworkId = BitskiConfig.networkIds[currentNetwork];
   const bitskiRedirectURL = BitskiConfig.environments[environment].redirectURL;
-  const sentryDSN = environment == 'production' && BitskiConfig.app.sentryDSN || false;
+  const sentryDSN = environment == 'production' && process.env.SENTRY_DSN || false;
   const devtool = environment == 'development' ? 'source-map' : false;
 
   const tokenURIBaseURL = 'https://example-dapp-1-api.bitski.com/tokens/'; //Change this to your backend. Token id will be appended.

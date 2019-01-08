@@ -12,7 +12,11 @@ Once your app is created, view your app details, then go to the OAuth settings, 
 
 http://localhost:3000/callback.html
 
-At this point, your Bitski app should be ready to go. Copy the app id from the app details page, and paste it into your bitski.config.example.js where it says `YOUR-APP-ID-HERE`, and rename the file to bitski.config.js.
+At this point, your Bitski app should be ready to go. Create a .env file in the root of this project, then copy the app id from the app details page, and paste it like this:
+
+```
+BITSKI_CLIENT_ID=YOUR-APP-ID
+```
 
 ## Running Locally
 
@@ -56,7 +60,13 @@ Once you have your dapp how you want it, you'll want to deploy it to a live bloc
 
 To use Bitski to deploy your contract, you'll need to create an App Wallet. Visit the [developer portal](https://developer.bitski.com), find your app in the list, and click it to view the details.
 
-Under the Wallets tab, click _New Wallet_. Then, visit the _Backend Credentials_ tab and click _New Credential_. You'll want to copy and paste both the credential id, and secret into your `bitski.config.js` under the `appWallet` section.
+Under the Wallets tab, click _New Wallet_. Then, visit the _Backend Credentials_ tab and click _New Credential_. You'll want to copy and paste both the credential id, and secret into your `.env` file like this:
+
+```
+BITSKI_CLIENT_ID=YOUR-CLIENT-ID
+BITSKI_CREDENTIAL_ID=YOUR-CREDENTIAL-ID
+BITSKI_CREDENTIAL_SECRET=YOUR-CREDENTIAL-SECRET
+```
 
 At this point, you should be ready to deploy your contracts.
 
