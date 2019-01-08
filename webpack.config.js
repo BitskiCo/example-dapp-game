@@ -13,6 +13,7 @@ module.exports = env => {
   const bitskiClientId = process.env.BITSKI_CLIENT_ID;
   const bitskiNetworkId = BitskiConfig.networkIds[currentNetwork];
   const bitskiRedirectURL = BitskiConfig.environments[environment].redirectURL;
+  const contractAddress = process.env.CONTRACT_ADDRESS || false;
   const sentryDSN = environment == 'production' && process.env.SENTRY_DSN || false;
   const devtool = environment == 'development' ? 'source-map' : false;
 
@@ -66,6 +67,7 @@ module.exports = env => {
         'BITSKI_CLIENT_ID': JSON.stringify(bitskiClientId),
         'BITSKI_REDIRECT_URL': JSON.stringify(bitskiRedirectURL),
         'TOKEN_URI_BASE_URL': JSON.stringify(tokenURIBaseURL),
+        'CONTRACT_ADDRESS': JSON.stringify(contractAddress),
         'SENTRY_DSN': JSON.stringify(sentryDSN)
       })
     ]

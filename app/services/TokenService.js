@@ -29,16 +29,11 @@ export default class TokenService {
         this.tokenURIBaseURL = tokenURIBaseURL;
         if (lmnftArtifacts && lmnftArtifacts.abi) {
             const abi = lmnftArtifacts.abi;
-            if (lmnftArtifacts.networks && lmnftArtifacts.networks[networkID] && lmnftArtifacts.networks[networkID].address) {
+            if (CONTRACT_ADDRESS) {
+                this.initContract(abi, CONTRACT_ADDRESS, defaultAccount);
+            } else if (lmnftArtifacts.networks && lmnftArtifacts.networks[networkID] && lmnftArtifacts.networks[networkID].address) {
                 const address = lmnftArtifacts.networks[networkID].address;
-                this.address = address;
-                this.contract = new web3.eth.Contract(abi, address);
-                this.contract.setProvider(window.web3.currentProvider);
-                let account = defaultAccount || window.web3.eth.defaultAccount;
-                if (account) {
-                    this.contract.defaultAccount = account;
-                    this.contract.options.from = account;
-                }
+                this.initContract(abi, address, defaultAccount);
             } else {
                 throw Error(`Contract not deployed on current network (${networkID}). Run truffle migrate first and try again.`);
             }
@@ -46,6 +41,17 @@ export default class TokenService {
             throw Error('Contract not compiled or not found');
         }
 
+    }
+
+    initContract(abi, address, defaultAccount) {
+        this.address = address;
+        this.contract = new web3.eth.Contract(abi, address);
+        this.contract.setProvider(window.web3.currentProvider);
+        let account = defaultAccount;
+        if (account) {
+            this.contract.defaultAccount = account;
+            this.contract.options.from = account;
+        }
     }
 
     /**
