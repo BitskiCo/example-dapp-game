@@ -1,5 +1,6 @@
 {
     "scripts": {
+        "start": "node server.js",
         "build": "NODE_ENV=production webpack",
         "test": "truffle test",
         "dev": "webpack-dev-server --mode development --port 3000"
@@ -12,6 +13,7 @@
         "clipboard": "^2.0.1",
         "copy-webpack-plugin": "^4.5.1",
         "css-loader": "^0.28.11",
+        "express": "^4.16.4",
         "extract-text-webpack-plugin": "^4.0.0-beta.0",
         "node-sass": "^4.8.3",
         "npm": "^6.0.0",
