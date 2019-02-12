@@ -1,7 +1,7 @@
-import BaseScene from './BaseScene.js';
+import { Scene } from 'phaser';
 
 const labelStyle = {
-    fontSize: '32px',
+    fontSize: '64px',
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center'
@@ -9,22 +9,22 @@ const labelStyle = {
 
 const whatsHappeningStyle = {
     backgroundColor: '#333333',
-    font: '18px Arial',
+    font: '32px Arial',
     fill: 'white',
     wordWrap: { width: 200 }
 }
 
 const labelConfig = {
-    x: 300,
-    y: 300,
-    padding: 10,
+    x: 600,
+    y: 600,
+    padding: 20,
     origin: {x: 0.5, y: 0.5 },
     text: 'Waiting for approval.',
     style: labelStyle
 };
 
 const buttonStyle = {
-    fontSize: '32px',
+    fontSize: '64px',
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
@@ -35,12 +35,12 @@ let backButtonConfig = {
     x: 0,
     y: 0,
     origin: { x: 0, y: 0 },
-    padding: 10,
+    padding: 20,
     text: 'Back',
     style: buttonStyle
 };
 
-export default class TransactionScene extends BaseScene {
+export default class TransactionScene extends Scene {
     constructor() {
         super({ key: 'transaction', active: false });
         this.callback = null;
@@ -52,13 +52,12 @@ export default class TransactionScene extends BaseScene {
     }
 
     create(config) {
-        super.create(config);
 
         this.make.text({
             x: 0,
             y: 0,
             origin: { x: 0, y: 1 },
-            padding: 10,
+            padding: 20,
             text: "Whats Happening?\n\nYou've requested a transation on the ethereum network. That transaction needs to be signed by your wallet. Once it is signed it is submitted to the ethereum network where it will either be accepted or rejected.",
             style: whatsHappeningStyle
         });
