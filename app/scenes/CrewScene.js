@@ -1,9 +1,9 @@
 import TokenService from '../services/TokenService.js';
-import BaseScene from './BaseScene.js';
+import { Scene } from 'phaser';
 import Phaser from 'phaser';
 
 const labelStyle = {
-    fontSize: '32px',
+    fontSize: '64px',
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
@@ -11,7 +11,7 @@ const labelStyle = {
 };
 
 const buttonStyle = {
-    fontSize: '32px',
+    fontSize: '64px',
     fontFamily: 'Arial',
     fontWeight: 'bold',
     color: '#ffffff',
@@ -21,9 +21,9 @@ const buttonStyle = {
 
 const whatsHappeningStyle = {
     backgroundColor: '#333333',
-    font: '16px Arial',
+    font: '32px Arial',
     fill: 'white',
-    wordWrap: { width: 580 }
+    wordWrap: { width: 1160 }
 }
 
 const characterPositions = [
@@ -34,7 +34,7 @@ const characterPositions = [
     [340, 310],
 ];
 
-export default class CrewScene extends BaseScene {
+export default class CrewScene extends Scene {
     constructor() {
         super({ key: 'crew', active: false });
         this.tokens = [];
@@ -65,14 +65,13 @@ export default class CrewScene extends BaseScene {
     }
 
     create(config) {
-        super.create(config);
         let game = this;
 
         this.make.text({
             x: 0,
-            y: 600,
+            y: 1200,
             origin: { x: 0, y: 1 },
-            padding: 10,
+            padding: 20,
             text: "Whats Happening?\n\nWe've queried the ethereum network for any ERC721 tokens that are available from our contract. For each token we calculate an appearance and show that here.\n\nIf you don't have any tokens we let you 'mint' up to five tokens.\n\nIf you do have a token you should see it here. That means our contract worked!",
             style: whatsHappeningStyle
         });
@@ -85,7 +84,7 @@ export default class CrewScene extends BaseScene {
             let character = token.imageId;
             let characterPosition = characterPositions[i];
             let characterImage = this.physics.add.image(characterPosition[0], characterPosition[1], `character-${character}`);
-            characterImage.setScale(0.7);
+            characterImage.setScale(1.2);
             characterImage.setOrigin(0,0);
             let velocityX = Math.random() * (100 - (-100)) + (-100);
             let velocityY = Math.random() * (300 - (-300)) + (-300);
@@ -100,7 +99,7 @@ export default class CrewScene extends BaseScene {
             });
         }
 
-        this.physics.world.setBounds(0, 84, 500, 250);
+        this.physics.world.setBounds(0, 168, 1000, 500);
 
         var buttonTitle = '...'
 
@@ -115,10 +114,10 @@ export default class CrewScene extends BaseScene {
         // TODO: Show $/Ξ price
 
         let labelConfig = {
-            x: 300,
+            x: 600,
             y: 0,
             origin: { x: 0.5, y: 0 },
-            padding: 10,
+            padding: 20,
             text: buttonTitle,
             style: labelStyle
         };
@@ -127,9 +126,9 @@ export default class CrewScene extends BaseScene {
 
         if (totalTokens < 5) {
             let buttonConfig = {
-                x: 600,
+                x: 1200,
                 y: 0,
-                padding: 10,
+                padding: 20,
                 origin: { x: 1, y: 0 },
                 text: "Get More",
                 style: buttonStyle

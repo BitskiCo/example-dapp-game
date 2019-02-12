@@ -29,11 +29,15 @@ export default class Game {
     }
 
     loadGame() {
-        const size = Math.min(600, window.innerWidth);
         const gameConfig = {
             type: Phaser.AUTO,
-            width: window.innerWidth,
-            height: window.innerHeight,
+            scale: {
+                parent: 'game',
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH,
+                width: 1200,
+                height: 1200
+            },
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -47,10 +51,5 @@ export default class Game {
 
         const game = new Phaser.Game(gameConfig);
         this.gameEngine = game;
-
-        window.onresize = function() {
-            game.renderer.resize(window.innerWidth, window.innerHeight);
-            game.events.emit('resize');
-        };
     }
 }

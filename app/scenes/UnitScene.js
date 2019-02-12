@@ -1,8 +1,8 @@
-import BaseScene from './BaseScene.js';
+import { Scene } from 'phaser';
 import TokenService from '../services/TokenService.js';
 
 const buttonStyle = {
-    fontSize: '32px',
+    fontSize: '64px',
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
@@ -10,7 +10,7 @@ const buttonStyle = {
 };
 
 const deleteStyle = {
-    fontSize: '32px',
+    fontSize: '64px',
     fontFamily: 'Arial',
     color: '#ffffff',
     align: 'center',
@@ -19,12 +19,12 @@ const deleteStyle = {
 
 const whatsHappeningStyle = {
     backgroundColor: '#333333',
-    font: '16px Arial',
+    font: '32px Arial',
     fill: 'white',
-    wordWrap: { width: 600 }
+    wordWrap: { width: 1200 }
 }
 
-export default class UnitScene extends BaseScene {
+export default class UnitScene extends Scene {
     constructor() {
         super({ key: 'unit', active: false });
     }
@@ -38,13 +38,11 @@ export default class UnitScene extends BaseScene {
     }
 
     create(config) {
-        super.create(config);
-
         this.make.text({
             x: 0,
-            y: 600,
+            y: 1200,
             origin: { x: 0, y: 1 },
-            padding: 10,
+            padding: 20,
             text: "Whats Happening?\n\nThis is one of the ERC721 tokens you own!\n\nAnyone can verity that you are the owner of this token. You can send it to someone else.\n\nWe also let you 'delete' tokens (by sending them back to the contract) in case you don't like the token you got.",
             style: whatsHappeningStyle
         });
@@ -52,20 +50,19 @@ export default class UnitScene extends BaseScene {
         const token = config.token;
         const character = token.imageId;
         const characterImageString = `character-${character}`;
-        const characterImage = this.sys.add.image(300, 300, characterImageString);
+        const characterImage = this.sys.add.image(600, 600, characterImageString);
+        characterImage.setScale(1.5);
 
         characterImage.setInteractive();
-        characterImage.on('pointerdown', () => {
-            this.input.addUpCallback(function () {
-                window.open(`https://rinkeby.opensea.io/assets/${config.tokenService.address}/${token.id}`, '_blank');
-            }, true);
+        characterImage.on('pointerup', () => {
+            window.open(`https://rinkeby.opensea.io/assets/${config.tokenService.address}/${token.id}`, '_blank');
         });
 
         let backButtonConfig = {
             x: 0,
             y: 0,
             origin: { x: 0, y: 0 },
-            padding: 10,
+            padding: 20,
             text: 'Back',
             style: buttonStyle
         };
@@ -76,9 +73,9 @@ export default class UnitScene extends BaseScene {
         backButton.on('pointerup', this.back, this);
 
         let deleteButtonConfig = {
-            x: 600,
+            x: 1200,
             y: 0,
-            padding: 10,
+            padding: 20,
             origin: { x: 1, y: 0 },
             text: 'Delete',
             style: deleteStyle
