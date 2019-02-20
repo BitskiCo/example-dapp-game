@@ -1,37 +1,13 @@
 import TokenService from '../services/TokenService.js';
 import { Scene } from 'phaser';
-import Phaser from 'phaser';
-
-const labelStyle = {
-    fontSize: '64px',
-    fontFamily: 'Arial',
-    color: '#ffffff',
-    align: 'center',
-    backgroundColor: '#2DAA58'
-};
-
-const buttonStyle = {
-    fontSize: '64px',
-    fontFamily: 'Arial',
-    fontWeight: 'bold',
-    color: '#ffffff',
-    align: 'center',
-    backgroundColor: '#2B67AB'
-};
-
-const whatsHappeningStyle = {
-    backgroundColor: '#333333',
-    font: '32px Arial',
-    fill: 'white',
-    wordWrap: { width: 1160 }
-}
+import styles from '../utils/styles';
 
 const characterPositions = [
-    [100, 170],
-    [260, 150],
-    [420, 190],
-    [180, 310],
-    [340, 310],
+    [200, 340],
+    [520, 300],
+    [840, 380],
+    [360, 620],
+    [680, 620],
 ];
 
 export default class CrewScene extends Scene {
@@ -72,8 +48,8 @@ export default class CrewScene extends Scene {
             y: 1200,
             origin: { x: 0, y: 1 },
             padding: 20,
-            text: "Whats Happening?\n\nWe've queried the ethereum network for any ERC721 tokens that are available from our contract. For each token we calculate an appearance and show that here.\n\nIf you don't have any tokens we let you 'mint' up to five tokens.\n\nIf you do have a token you should see it here. That means our contract worked!",
-            style: whatsHappeningStyle
+            text: "These are the crypto characters you own from our smart contract. Each character is represented by a unique ERC-721 token which determines its appearance.\n\nWe allow you to \"mint\" up to five characters via our smart contract.",
+            style: styles.explanation
         });
 
         let totalTokens = config.tokens.length;
@@ -93,49 +69,56 @@ export default class CrewScene extends Scene {
             characterImage.setGravityY(200);
             characterImage.setCollideWorldBounds(true);
 
-            characterImage.setInteractive();
+            characterImage.setInteractive({ useHandCursor: true });
             characterImage.on('pointerup', function(pointer) {
                 game.scene.start('unit', { token: token, tokenService: config.tokenService });
             });
         }
 
-        this.physics.world.setBounds(0, 168, 1000, 500);
+        this.physics.world.setBounds(0, 168, 1100, 500);
 
-        var buttonTitle = '...'
+        let title = '...'
 
         if (totalTokens === 1) {
-            buttonTitle = 'You have 1 guy!';
+            title = 'You have 1 guy!';
         } else if (totalTokens < 5) {
-            buttonTitle = 'You have ' + totalTokens + ' guys!';
+            title = 'You have ' + totalTokens + ' guys!';
         } else {
-            buttonTitle = 'You have a complete crew!';
+            title = 'You have a complete crew!';
         }
 
-        // TODO: Show $/Ξ price
-
-        let labelConfig = {
+        this.sys.make.text({
             x: 600,
             y: 0,
             origin: { x: 0.5, y: 0 },
             padding: 20,
-            text: buttonTitle,
-            style: labelStyle
-        };
+            text: title,
+            style: styles.title
+        });
 
-        let label = this.sys.make.text(labelConfig);
+        this.logOutButton = this.sys.make.text({
+            x: 1180,
+            y: 20,
+            padding: 20,
+            origin: { x: 1, y: 0 },
+            style: styles.secondaryButton,
+            text: 'Sign Out'
+        });
+        this.logOutButton.setInteractive({ useHandCursor: true });
+        this.logOutButton.on('pointerup', () => {
+           window.signOut();
+        });
 
         if (totalTokens < 5) {
-            let buttonConfig = {
-                x: 1200,
-                y: 0,
+            let button = this.sys.make.text({
+                x: 600,
+                y: 950,
                 padding: 20,
-                origin: { x: 1, y: 0 },
-                text: "Get More",
-                style: buttonStyle
-            };
-
-            let button = this.sys.make.text(buttonConfig);
-            button.setInteractive();
+                origin: { x: 0.5, y: 1 },
+                style: styles.primaryButton,
+                text: 'Get Another Character'
+            });
+            button.setInteractive({ useHandCursor: true });
             button.on('pointerup', this.mintToken, this);
         }
     }

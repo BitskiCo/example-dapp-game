@@ -8,27 +8,50 @@ if (SENTRY_DSN) {
   Raven.config(SENTRY_DSN).install();
 }
 
+// Load webfonts before rendering app
+WebFont.load({
+  google: {
+    families: ['Acme']
+  },
+  active: () => {
+    start();
+  }
+});
+
 let bitski = new Bitski(BITSKI_CLIENT_ID, BITSKI_REDIRECT_URL);
 
-window.addEventListener('load', function() {
-  // Setup ClipboardJS
-  let clipboard = new ClipboardJS('#copy-address');
-
-  // Setup Metamask Button
-  configureMetamaskButton();
-
-  // Setup Bitski
-  bitski.getAuthStatus().then((authStatus) => {
-    if (authStatus == AuthenticationStatus.Connected) {
-      showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
-    } else {
-      showLoginButton(bitski);
-    }
-  }).catch(function (error) {
+window.signOut = function() {
+  bitski.signOut().then(() => {
+    window.game.gameEngine.destroy(true);
+    document.getElementById('signed-out').style.display = 'block';
+    document.getElementById('signed-in').style.display = 'none';
+  }).catch((error) => {
     console.error(error);
-    showLoginButton(bitski);
+    window.game.gameEngine.destroy(true);
+    document.getElementById('signed-out').style.display = 'block';
+    document.getElementById('signed-in').style.display = 'none';
   });
-});
+}
+
+function start() {
+    // Setup ClipboardJS
+    let clipboard = new ClipboardJS('#copy-address');
+
+    // Setup Metamask Button
+    configureMetamaskButton();
+
+    // Setup Bitski
+    bitski.getAuthStatus().then((authStatus) => {
+      if (authStatus == AuthenticationStatus.Connected) {
+        showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
+      } else {
+        showLoginButton(bitski);
+      }
+    }).catch(function (error) {
+      console.error(error);
+      showLoginButton(bitski);
+    });
+}
 
 function showApp(provider) {
   window.web3 = new Web3(provider);

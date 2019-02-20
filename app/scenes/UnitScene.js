@@ -1,28 +1,6 @@
 import { Scene } from 'phaser';
 import TokenService from '../services/TokenService.js';
-
-const buttonStyle = {
-    fontSize: '64px',
-    fontFamily: 'Arial',
-    color: '#ffffff',
-    align: 'center',
-    backgroundColor: '#2B67AB'
-};
-
-const deleteStyle = {
-    fontSize: '64px',
-    fontFamily: 'Arial',
-    color: '#ffffff',
-    align: 'center',
-    backgroundColor: '#E95C3B'
-};
-
-const whatsHappeningStyle = {
-    backgroundColor: '#333333',
-    font: '32px Arial',
-    fill: 'white',
-    wordWrap: { width: 1200 }
-}
+import styles from '../utils/styles';
 
 export default class UnitScene extends Scene {
     constructor() {
@@ -43,8 +21,8 @@ export default class UnitScene extends Scene {
             y: 1200,
             origin: { x: 0, y: 1 },
             padding: 20,
-            text: "Whats Happening?\n\nThis is one of the ERC721 tokens you own!\n\nAnyone can verity that you are the owner of this token. You can send it to someone else.\n\nWe also let you 'delete' tokens (by sending them back to the contract) in case you don't like the token you got.",
-            style: whatsHappeningStyle
+            text: "Whats Happening?\n\nThis is one of the ERC721 tokens you own!\n\nAnyone can verify that you are the owner of this token. You can send it to someone else.\n\nWe also let you 'delete' tokens (by sending them back to the contract) in case you don't like the token you got.",
+            style: styles.explanation
         });
 
         const token = config.token;
@@ -53,7 +31,7 @@ export default class UnitScene extends Scene {
         const characterImage = this.sys.add.image(600, 600, characterImageString);
         characterImage.setScale(1.5);
 
-        characterImage.setInteractive();
+        characterImage.setInteractive({ useHandCursor: true });
         characterImage.on('pointerup', () => {
             window.open(`https://rinkeby.opensea.io/assets/${config.tokenService.address}/${token.id}`, '_blank');
         });
@@ -64,12 +42,12 @@ export default class UnitScene extends Scene {
             origin: { x: 0, y: 0 },
             padding: 20,
             text: 'Back',
-            style: buttonStyle
+            style: styles.primaryButton
         };
 
         let backButton = this.sys.make.text(backButtonConfig);
 
-        backButton.setInteractive();
+        backButton.setInteractive({ useHandCursor: true });
         backButton.on('pointerup', this.back, this);
 
         let deleteButtonConfig = {
@@ -78,12 +56,12 @@ export default class UnitScene extends Scene {
             padding: 20,
             origin: { x: 1, y: 0 },
             text: 'Delete',
-            style: deleteStyle
+            style: styles.negativeButton
         };
 
         let deleteButton = this.sys.make.text(deleteButtonConfig);
 
-        deleteButton.setInteractive();
+        deleteButton.setInteractive({ useHandCursor: true });
         deleteButton.on('pointerup', (event) => {
             this.deleteToken.call(this, event, token);
         });

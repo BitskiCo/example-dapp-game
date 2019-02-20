@@ -1,13 +1,6 @@
 import TokenService from '../services/TokenService.js';
 import { Scene } from 'phaser';
-
-const labelStyle = {
-    fontSize: '64px',
-    fontFamily: 'Arial',
-    color: '#ffffff',
-    align: 'center',
-    backgroundColor: '#2DAA58'
-};
+import styles from '../utils/styles';
 
 const labelConfig = {
     x: 600,
@@ -15,15 +8,8 @@ const labelConfig = {
     origin: { x: 0.5, y: 0 },
     padding: 20,
     text: 'Loading....',
-    style: labelStyle
+    style: styles.title
 };
-
-const whatsHappeningStyle = {
-    backgroundColor: '#333333',
-    font: '32px Arial',
-    fill: 'white',
-    wordWrap: { width: 1200 }
-}
 
 export default class BootScene extends Scene {
     constructor() {
@@ -39,7 +25,7 @@ export default class BootScene extends Scene {
             padding: 20,
             origin: { x: 0, y: 1 },
             text: "Whats Happening?\n\nWe are querying the ethereum network. If this takes a while something might be broken...",
-            style: whatsHappeningStyle
+            style: styles.explanation
         });
         this.make.text(labelConfig);
 
