@@ -26,6 +26,19 @@ export default class NeedEthScene extends Scene {
             style: styles.title
         });
 
+        this.logOutButton = this.sys.make.text({
+            x: 1180,
+            y: 20,
+            padding: 20,
+            origin: { x: 1, y: 0 },
+            style: styles.secondaryButton,
+            text: 'Sign Out'
+        });
+        this.logOutButton.setInteractive({ useHandCursor: true });
+        this.logOutButton.on('pointerup', () => {
+           window.signOut();
+        });
+
         const ethButton = document.getElementById("get-eth");
         ethButton.style.display = 'block';
     }

@@ -40,16 +40,28 @@ function start() {
     // Setup Metamask Button
     configureMetamaskButton();
 
+    // Setup Bitski button
+    bitski.getConnectButton({ container: document.getElementById('connect-button') }, (error, user) => {
+      if (error) {
+        document.getElementById('error').innerText = (error && error.message) || error
+        console.error(error);
+      }
+
+      if (user) {
+        showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
+      }
+    });
+
     // Setup Bitski
     bitski.getAuthStatus().then((authStatus) => {
       if (authStatus == AuthenticationStatus.Connected) {
         showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
       } else {
-        showLoginButton(bitski);
+        showLoginButton();
       }
     }).catch(function (error) {
       console.error(error);
-      showLoginButton(bitski);
+      showLoginButton();
     });
 }
 
@@ -73,20 +85,9 @@ function showApp(provider) {
   });
 }
 
-function showLoginButton(bitski) {
+function showLoginButton() {
   document.getElementById('signed-out').style.display = 'block';
   document.getElementById('signed-in').style.display = 'none';
-
-  bitski.getConnectButton({ container: document.getElementById('connect-button') }, (error, user) => {
-    if (error) {
-      document.getElementById('error').innerText = (error && error.message) || error
-      console.error(error);
-    }
-
-    if (user) {
-      showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
-    }
-  });
 }
 
 function configureMetamaskButton() {
