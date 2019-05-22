@@ -54,6 +54,7 @@ export default class TransactionScene extends Scene {
             }
         })
         .on('error', (error) => {
+            console.error(error);
             message.setText('Error: ' + error.message);
             const back = this.make.text({
                 x: 0,
