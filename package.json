@@ -14,7 +14,7 @@
         "openzeppelin-solidity": "2.0.0",
         "phaser": "^3.16.2",
         "raven-js": "^3.26.2",
-        "web3": "1.0.0-beta.33"
+        "web3": "1.0.0-beta.37"
     },
     "devDependencies": {
         "@babel/core": "^7.4.4",
