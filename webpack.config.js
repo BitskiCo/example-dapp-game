@@ -7,15 +7,16 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = env => {
   // Configuration options
-  const environment = process.env.NODE_ENV || 'development';
-  const currentNetwork = BitskiConfig.environments[environment].network;
-  const currentNetId = BitskiConfig.environments[environment].netId;
+  const envName = process.env.NODE_ENV || 'development';
+  const environment = BitskiConfig.environments[envName];
+  const rpcUrl = environment.network.rpcUrl;
+  const chainId = environment.network.chainId;
+  const networkName = environment.network.name;
   const bitskiClientId = process.env.BITSKI_CLIENT_ID;
-  const bitskiNetworkId = BitskiConfig.networkIds[currentNetwork];
-  const bitskiRedirectURL = BitskiConfig.environments[environment].redirectURL;
+  const bitskiRedirectURL = environment.redirectURL;
   const contractAddress = process.env.CONTRACT_ADDRESS || false;
-  const sentryDSN = environment == 'production' && process.env.SENTRY_DSN || false;
-  const devtool = environment == 'development' ? 'source-map' : false;
+  const sentryDSN = envName == 'production' && process.env.SENTRY_DSN || false;
+  const devtool = envName == 'development' ? 'source-map' : false;
 
   const tokenURIBaseURL = 'https://example-dapp-1-api.bitski.com/tokens/'; //Change this to your backend. Token id will be appended.
 
@@ -31,13 +32,12 @@ module.exports = env => {
       rules: [{
           test: [/\.vert$/, /\.frag$/],
           use: 'raw-loader'
-        }, {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          loader: 'babel-loader',
-
-          options: {
-            presets: ['env']
+        },
+        {
+          test: /\.m?js$/,
+          exclude: /(node_modules|bower_components)/,
+          use: {
+            loader: 'babel-loader'
           }
         }
       ]
@@ -61,9 +61,9 @@ module.exports = env => {
       new webpack.DefinePlugin({
         'CANVAS_RENDERER': JSON.stringify(true),
         'WEBGL_RENDERER': JSON.stringify(true),
-        'BITSKI_PROVIDER_ID': JSON.stringify(bitskiNetworkId),
-        'EXPECTED_NETWORK_NAME': JSON.stringify(bitskiNetworkId),
-        'EXPECTED_NETWORK_ID': JSON.stringify(currentNetId),
+        'PROVIDER_CHAIN_ID': JSON.stringify(chainId),
+        'PROVIDER_RPC_URL': JSON.stringify(rpcUrl),
+        'EXPECTED_NETWORK_NAME': JSON.stringify(networkName),
         'BITSKI_CLIENT_ID': JSON.stringify(bitskiClientId),
         'BITSKI_REDIRECT_URL': JSON.stringify(bitskiRedirectURL),
         'TOKEN_URI_BASE_URL': JSON.stringify(tokenURIBaseURL),

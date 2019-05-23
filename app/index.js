@@ -1,8 +1,9 @@
 import Game from './Game.js';
 import ClipboardJS from 'clipboard';
-import { Bitski, AuthenticationStatus } from 'bitski';
+import { Bitski, AuthenticationStatus, Network } from 'bitski';
 import Raven from 'raven-js';
 import Web3 from 'web3';
+import '@babel/polyfill';
 
 if (SENTRY_DSN) {
   Raven.config(SENTRY_DSN).install();
@@ -48,14 +49,22 @@ function start() {
       }
 
       if (user) {
-        showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
+        const network = {
+          rpcUrl: PROVIDER_RPC_URL,
+          chainId: PROVIDER_CHAIN_ID,
+        };
+        showApp(bitski.getProvider({ network }));
       }
     });
 
     // Setup Bitski
     bitski.getAuthStatus().then((authStatus) => {
       if (authStatus == AuthenticationStatus.Connected) {
-        showApp(bitski.getProvider(BITSKI_PROVIDER_ID));
+        const network = {
+          rpcUrl: PROVIDER_RPC_URL,
+          chainId: PROVIDER_CHAIN_ID,
+        };
+        showApp(bitski.getProvider({ network }));
       } else {
         showLoginButton();
       }
@@ -68,7 +77,7 @@ function start() {
 function showApp(provider) {
   window.web3 = new Web3(provider);
   web3.eth.net.getId().then(netId => {
-    if (netId !== EXPECTED_NETWORK_ID) {
+    if (netId !== PROVIDER_CHAIN_ID) {
       alert(`Please set your network to ${EXPECTED_NETWORK_NAME}`);
     } else {
       document.getElementById('signed-out').style.display = 'none';
@@ -78,7 +87,7 @@ function showApp(provider) {
       web3.eth.getAccounts().then((accounts) => {
         if (accounts[0]) {
           document.getElementById('your-address').innerText = accounts[0];
-          document.getElementById('copy-address').dataset['clipboardText'] = accounts[0];
+          document.getElementById('copy-address').dataset.clipboardText = accounts[0];
         }
       });
     }

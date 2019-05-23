@@ -13,6 +13,11 @@ const appWallet = {
 };
 
 module.exports = {
+  compilers: {
+    solc: {
+      version: "^0.4.24"
+    }
+  },
   networks: {
     development: {
       host: "localhost",
@@ -22,19 +27,19 @@ module.exports = {
     live: {
       network_id: '1',
       provider: () => {
-        return BitskiTruffleProvider("mainnet", appWallet)
+        return BitskiTruffleProvider("mainnet", appWallet);
       }
     },
     kovan: {
       network_id: '42',
       provider: () => {
-        return BitskiTruffleProvider("kovan", appWallet)
+        return BitskiTruffleProvider("kovan", appWallet);
       }
     },
     rinkeby: {
       network_id: '4',
       provider: () => {
-        return BitskiTruffleProvider("rinkeby", appWallet)
+        return BitskiTruffleProvider("rinkeby", appWallet);
       }
     }
   }
