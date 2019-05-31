@@ -1,5 +1,7 @@
 require('dotenv').config();
-const BitskiTruffleProvider = require('bitski-truffle-provider');
+const { ProviderManager } = require('bitski-node');
+
+const manager = new ProviderManager(process.env.BITSKI_CREDENTIAL_ID, process.env.BITSKI_CREDENTIAL_SECRET);
 
 const appWallet = {
   client: {
@@ -27,19 +29,19 @@ module.exports = {
     live: {
       network_id: '1',
       provider: () => {
-        return BitskiTruffleProvider("mainnet", appWallet);
+        return manager.getProvider('mainnet');
       }
     },
     kovan: {
       network_id: '42',
       provider: () => {
-        return BitskiTruffleProvider("kovan", appWallet);
+        return manager.getProvider('kovan');
       }
     },
     rinkeby: {
       network_id: '4',
       provider: () => {
-        return BitskiTruffleProvider("rinkeby", appWallet);
+        return manager.getProvider('rinkeby');
       }
     }
   }
