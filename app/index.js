@@ -1,6 +1,6 @@
 import Game from './Game.js';
 import ClipboardJS from 'clipboard';
-import { Bitski, AuthenticationStatus, Network } from 'bitski';
+import { Bitski, AuthenticationStatus, AuthenticationError, AuthenticationErrorCode } from 'bitski';
 import Raven from 'raven-js';
 import Web3 from 'web3';
 import '@babel/polyfill';
@@ -32,7 +32,7 @@ window.signOut = function() {
     document.getElementById('signed-out').style.display = 'block';
     document.getElementById('signed-in').style.display = 'none';
   });
-}
+};
 
 function start() {
     // Setup ClipboardJS
@@ -41,39 +41,47 @@ function start() {
     // Setup Metamask Button
     configureMetamaskButton();
 
-    // Setup Bitski button
+    // Define a bitski network to use, from env variables
+    const network = {
+      rpcUrl: PROVIDER_RPC_URL,
+      chainId: PROVIDER_CHAIN_ID,
+    };
+
+    // Configure bitski connect button (whether we use it or not)
     bitski.getConnectButton({ container: document.getElementById('connect-button') }, (error, user) => {
+      // Check for errors
       if (error) {
-        document.getElementById('error').innerText = (error && error.message) || error
-        console.error(error);
+        // Check to see if the user cancelled the request
+        if (error instanceof AuthenticationError && error.code === AuthenticationErrorCode.UserCancelled) {
+          // Just log for informational purposes
+          console.log('Debug: User Cancelled');
+        } else {
+          // Regular error
+          document.getElementById('error').innerText = (error && error.message) || error;
+          console.error(error);
+        }
       }
-
+      // Check for user (successfully logged in)
       if (user) {
-        const network = {
-          rpcUrl: PROVIDER_RPC_URL,
-          chainId: PROVIDER_CHAIN_ID,
-        };
         showApp(bitski.getProvider({ network }));
       }
     });
 
-    // Setup Bitski
-    bitski.getAuthStatus().then((authStatus) => {
-      if (authStatus == AuthenticationStatus.Connected) {
-        const network = {
-          rpcUrl: PROVIDER_RPC_URL,
-          chainId: PROVIDER_CHAIN_ID,
-        };
-        showApp(bitski.getProvider({ network }));
-      } else {
-        showLoginButton();
-      }
-    }).catch(function (error) {
-      console.error(error);
+    // Determine logged in state to configure the UI for the current state
+    if (bitski.authStatus === AuthenticationStatus.NotConnected) {
+      // Handle logged out state: show log in
       showLoginButton();
-    });
+    } else {
+      // Handle logged in / expired state: continue to app
+      // Get a provider, passing the network configuration
+      const provider = bitski.getProvider({ network });
+      // Show the app UI
+      showApp(provider);
+    }
 }
 
+// Initialize a web3 instance with the given provider,
+// and show the app UI
 function showApp(provider) {
   window.web3 = new Web3(provider);
   web3.eth.net.getId().then(netId => {
@@ -94,11 +102,13 @@ function showApp(provider) {
   });
 }
 
+// Hide the app UI, and show the log in UI
 function showLoginButton() {
   document.getElementById('signed-out').style.display = 'block';
   document.getElementById('signed-in').style.display = 'none';
 }
 
+// Configures a button for using an in-page provider (metamask)
 function configureMetamaskButton() {
   var metamaskButton = document.getElementById('metamask-button');
   if (metamaskButton) {
@@ -125,6 +135,7 @@ function configureMetamaskButton() {
       });
     };
 
+    // Only show the button if window.ethereum is defined
     if (window.ethereum) {
       metamaskButton.style.display = 'block';
     } else {
