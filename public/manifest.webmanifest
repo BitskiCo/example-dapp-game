@@ -1,0 +1,7 @@
+{
+  "short_name": "ExampleDApp",
+  "name": "Bitski Example DApp",
+  "background_color": "#000000",
+  "display": "standalone",
+  "start_url": "/"
+}

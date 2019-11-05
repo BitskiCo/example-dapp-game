@@ -1,6 +1,6 @@
 import Game from './Game.js';
 import ClipboardJS from 'clipboard';
-import { Bitski, AuthenticationStatus, AuthenticationError, AuthenticationErrorCode } from 'bitski';
+import { Bitski, AuthenticationStatus, AuthenticationError, AuthenticationErrorCode, OAuthSignInMethod } from 'bitski';
 import Raven from 'raven-js';
 import Web3 from 'web3';
 import '@babel/polyfill';
@@ -9,17 +9,28 @@ if (SENTRY_DSN) {
   Raven.config(SENTRY_DSN).install();
 }
 
+const redirectUrl = window.matchMedia('(display-mode: standalone)').matches ? window.location.href : BITSKI_REDIRECT_URL;
+let bitski = new Bitski(BITSKI_CLIENT_ID, redirectUrl);
+
 // Load webfonts before rendering app
 WebFont.load({
   google: {
     families: ['Acme']
   },
   active: () => {
-    start();
+    if (window.location.href.includes("code") || window.location.href.includes("error")) {
+      bitski.redirectCallback().catch((error) => {
+        document.getElementById('error').innerText = (error && error.message) || error;
+        console.error(JSON.stringify(error));
+      }).finally(() => {
+        start();
+      });
+    } else {
+      start();
+    }
   }
 });
 
-let bitski = new Bitski(BITSKI_CLIENT_ID, BITSKI_REDIRECT_URL);
 
 window.signOut = function() {
   bitski.signOut().then(() => {
@@ -47,8 +58,15 @@ function start() {
       chainId: PROVIDER_CHAIN_ID,
     };
 
+
+    let authMethod = OAuthSignInMethod.Popup;
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      authMethod = OAuthSignInMethod.Redirect;
+    }
+
     // Configure bitski connect button (whether we use it or not)
-    bitski.getConnectButton({ container: document.getElementById('connect-button') }, (error, user) => {
+    bitski.getConnectButton({ authMethod: authMethod, container: document.getElementById('connect-button') }, (error, user) => {
       // Check for errors
       if (error) {
         // Check to see if the user cancelled the request
