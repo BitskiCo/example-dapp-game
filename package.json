@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "@babel/polyfill": "^7.4.4",
-        "bitski": "^0.10.4",
+        "bitski": "^0.10.8",
         "clipboard": "^2.0.1",
         "dotenv": "^6.2.0",
         "express": "^4.16.4",
