@@ -81,7 +81,7 @@ function start() {
       }
       // Check for user (successfully logged in)
       if (user) {
-        showApp(bitski.getProvider({ network }));
+        showApp(bitski.getProvider({ network, webBaseUrl: 'https://sign-v2.bitski.com' }));
       }
     });
 
@@ -92,7 +92,7 @@ function start() {
     } else {
       // Handle logged in / expired state: continue to app
       // Get a provider, passing the network configuration
-      const provider = bitski.getProvider({ network });
+      const provider = bitski.getProvider({ network, webBaseUrl: 'https://sign-v2.bitski.com' });
       // Show the app UI
       showApp(provider);
     }
